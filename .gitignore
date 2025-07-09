@@ -1,0 +1,20 @@
+# Environnement virtuel
+venv/
+env/
+.venv/
+.conda/
+__pycache__/
+
+# Fichiers compilés Python
+*.pyc
+*.pyo
+
+# Base de données locale
+db.sqlite3
+
+# Fichiers et dossiers système
+.DS_Store
+*.log
+
+# Fichiers de VSCode
+.vscode/
