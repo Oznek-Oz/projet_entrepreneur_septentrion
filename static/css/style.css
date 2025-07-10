@@ -35,7 +35,6 @@
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        pointer-events: none;
     }
     .carousel-item img {
         height: 100vh !important;
