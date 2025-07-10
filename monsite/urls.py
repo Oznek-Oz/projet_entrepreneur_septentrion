@@ -23,7 +23,9 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("accueil.urls")),  # Include the accueil app's URLs
-    path("utilisateurs/", include("membres.urls")),  # Include the membres app's URLs
+    path("membres/", include("membres.urls")),  # Include the membres app's URLs
     path("polls/", include("polls.urls")),
+    path("adhesion/", include("adhesion.urls"))
+
     path("blog/", include("blog.urls")),  # Include the blog app's URLs
 ]

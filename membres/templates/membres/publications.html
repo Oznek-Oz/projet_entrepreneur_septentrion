@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+    @keyframes fadeSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .publication-form {
+        background-color: #1f2b45;
+        border-radius: 15px;
+        padding: 30px;
+        color: white;
+        animation: fadeSlideIn 0.6s ease-in-out;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+        margin-bottom: 50px;
+    }
+
+    .form-label {
+        font-weight: bold;
+    }
+
+    .form-control, .form-select {
+        background-color: #2d3e5e;
+        color: white;
+        border: none;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    }
+
+    .btn-publish {
+        background-color: #0dcaf0;
+        border: none;
+    }
+
+    .btn-publish:hover {
+        background-color: #31d2f2;
+    }
+
+    .bi {
+        margin-right: 8px;
+    }
+
+    .old-publications {
+        background-color: #1f2b45;
+        border-radius: 15px;
+        padding: 30px;
+        color: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .publication-item {
+        border-bottom: 1px solid #2d3e5e;
+        padding: 15px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .publication-details {
+        max-width: 75%;
+    }
+
+    .publication-actions a {
+        margin-left: 15px;
+        color: #0dcaf0;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+
+    .publication-actions a:hover {
+        color: #31d2f2;
+    }
+
+    .publication-title {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .publication-meta {
+        font-size: 0.85rem;
+        color: #a0aec0;
+    }
+</style>
+
+<div class="container py-5">
+    <h3 class="mb-4 text-info text-center fw-bold"><i class="bi bi-pencil-square"></i> Nouvelle Publication</h3>
+<!--formulaire pour enregistrer une publication -->
+    <div class="publication-form">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="titre" class="form-label"><i class="bi bi-type"></i> Titre</label>
+                <input type="text" class="form-control" id="titre" name="titre" placeholder="Titre de la publication" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="contenu" class="form-label"><i class="bi bi-body-text"></i> Contenu</label>
+                <textarea class="form-control" id="contenu" name="contenu" rows="5" placeholder="Écrivez votre contenu ici..." required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="categorie" class="form-label"><i class="bi bi-tags"></i> Catégorie</label>
+                <input type="text" class="form-control" id="categorie" name="categorie" placeholder="Exemple : Événement, Annonce, Projet..." required>
+            </div>
+
+            <div class="mb-3">
+                <label for="type" class="form-label"><i class="bi bi-layers"></i> Type de publication</label>
+                <select class="form-select" id="type" name="type" required>
+                    <option value="" disabled selected>Choisir un type...</option>
+                    <option value="article">Article</option>
+                    <option value="projet">Projet</option>
+                    <option value="annonce">Annonce</option>
+                    <option value="autre">Autre</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="date_post" class="form-label"><i class="bi bi-calendar-event"></i> Date de publication</label>
+                <input type="date" class="form-control" id="date_post" name="date_post" required>
+            </div>
+
+            <div class="mb-4">
+                <label for="image" class="form-label"><i class="bi bi-image"></i> Image d'illustration</label>
+                <input type="file" class="form-control" id="image" name="image">
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-publish px-5 py-2 fw-bold">
+                    <i class="bi bi-upload"></i> Publier
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- pour afficher les anciennes publications -->
+    <div class="old-publications">
+        <h4 class="mb-4 text-info fw-bold"><i class="bi bi-journal-text"></i> Mes anciennes publications</h4>
+
+        {% if publications %}
+            {% for pub in publications %}
+                <div class="publication-item">
+                    <div class="publication-details">
+                        <div class="publication-title">{{ pub.titre }}</div>
+                        <div class="publication-meta">
+                            <span><i class="bi bi-tags"></i> {{ pub.categorie }}</span> |
+                            <span><i class="bi bi-layers"></i> {{ pub.type }}</span> |
+                            <span><i class="bi bi-calendar-event"></i> {{ pub.date_post|date:"d M Y" }}</span>
+                        </div>
+                    </div>
+                    <div class="publication-actions">
+                        <a href="{% url 'modifier_publication' pub.id %}" title="Modifier"><i class="bi bi-pencil-square"></i> Modifier</a>
+                        <a href="{% url 'supprimer_publication' pub.id %}" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cette publication ?');"><i class="bi bi-trash"></i> Supprimer</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-muted">Vous n'avez encore aucune publication.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

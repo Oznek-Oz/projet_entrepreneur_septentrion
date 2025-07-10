@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- CSS Custom pour animations modernes -->
+<style>
+    @keyframes fadeSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dashboard-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-radius: 15px;
+        cursor: pointer;
+        animation: fadeSlideIn 0.7s ease forwards;
+        opacity: 0;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .dashboard-icon {
+        font-size: 2.7rem;
+        margin-bottom: 12px;
+    }
+
+    body {
+        background-color: rgb(32, 44, 70);
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center mb-5 fw-bold text-white">Bienvenue {{ user.username }}</h2>
+<!--formulaire d'acceuil pour la page membres-->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <a href="{% url 'profil' %}" class="text-decoration-none text-center">
+                <div class="card dashboard-card border-primary text-primary p-4">
+                    <div class="dashboard-icon"><i class="bi bi-person-circle"></i></div>
+                    <h5 class="fw-bold">Mon Profil</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'annuaire' %}" class="text-decoration-none text-center">
+                <div class="card dashboard-card border-success text-success p-4">
+                    <div class="dashboard-icon"><i class="bi bi-people-fill"></i></div>
+                    <h5 class="fw-bold">Annuaire des Membres</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'publications' %}" class="text-decoration-none text-center">
+                <div class="card dashboard-card border-info text-info p-4">
+                    <div class="dashboard-icon"><i class="bi bi-journal-richtext"></i></div>
+                    <h5 class="fw-bold">Mes Publications</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'forum' %}" class="text-decoration-none text-center">
+                <div class="card dashboard-card border-warning text-warning p-4">
+                    <div class="dashboard-icon"><i class="bi bi-chat-dots"></i></div>
+                    <h5 class="fw-bold">Forum / Discussions</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'ressources' %}" class="text-decoration-none text-center">
+                <div class="card dashboard-card border-danger text-danger p-4">
+                    <div class="dashboard-icon"><i class="bi bi-folder-symlink"></i></div>
+                    <h5 class="fw-bold">Ressources</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const cards = document.querySelectorAll('.dashboard-card');
+        cards.forEach((card, index) => {
+            card.style.animationDelay = `${index * 0.1}s`;
+        });
+    });
+</script>
+
+{% endblock %}
