@@ -1,20 +1,21 @@
-from django.shortcuts import redirect, render
-from .forms import InscriptionForm
-from django.contrib.auth import login, authenticate
-# Create your views here.
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
-def inscription(request):
-    """
-    View to handle user registration.
-    """
-    if request.method == 'POST':
-        form = InscriptionForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # Automatically log in the user after registration
-            login(request, user)
-            return render(request, '/', {'user': user})
-    else:
-        form = InscriptionForm()
-        return render(request, 'membres/inscription.html', {'form': form})
-    return HttpResponse("Test: vue inscription OK")
+def dashboard(request):
+    return render(request, 'membres/dashboard.html')
+
+
+def profil(request):
+    return render(request, 'membres/profil.html')
+
+def annuaire(request):
+    return render(request, 'membres/annuaire.html')
+
+def publications(request):
+    return render(request, 'membres/publications.html')
+
+def ressources(request):
+    return render(request, 'membres/ressources.html')
+
+def forum(request):
+    return render(request, 'membres/forum.html')

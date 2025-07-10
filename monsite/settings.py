@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accueil",
     "membres",
+    "adhesion"
 ]
 
 MIDDLEWARE = [
