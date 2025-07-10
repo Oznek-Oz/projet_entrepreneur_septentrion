@@ -69,3 +69,10 @@ nav .active{
     background-color: #0a53be !important;
     color: white !important;
 }
+
+.brand{
+    animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+    50% { border-color: transparent; }
+}

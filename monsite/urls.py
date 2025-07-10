@@ -25,4 +25,5 @@ urlpatterns = [
     path("", include("accueil.urls")),  # Include the accueil app's URLs
     path("utilisateurs/", include("membres.urls")),  # Include the membres app's URLs
     path("polls/", include("polls.urls")),
+    path("blog/", include("blog.urls")),  # Include the blog app's URLs
 ]
