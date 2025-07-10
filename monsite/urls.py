@@ -25,7 +25,6 @@ urlpatterns = [
     path("", include("accueil.urls")),  # Include the accueil app's URLs
     path("membres/", include("membres.urls")),  # Include the membres app's URLs
     path("polls/", include("polls.urls")),
-    path("adhesion/", include("adhesion.urls"))
-
+    path("adhesion/", include("adhesion.urls")),
     path("blog/", include("blog.urls")),  # Include the blog app's URLs
 ]

@@ -23,7 +23,7 @@
                     </p><br>
                     <p class="lead">
                         <a
-                                href="#"
+                                href="{% url 'adhesion' %}"
                                 class="btn text-light btn-lg btn-light fw-bold border-white bg-gdd"
                         >Devenir membre</a
                         >
@@ -198,13 +198,13 @@
             </div>
         </div>
 
-        <a href="/actualites/" class="btn btn-light text-gdd mt-3">Voir toutes les actualités</a>
+        <a href="{% url 'blog' %}" class="btn btn-light text-gdd mt-3">Voir toutes les actualités</a>
 
         <hr class="featurette-divider"/>
     </section>
 
     <!--Nos réalisations-->
-    <section class="container mt-5">
+    <section class="container mt-5 realisation">
         <div class="d-flex flex-lg-wrap align-items-center py-md-5 m-5 mt-0 me-0 ms-4 gap-2">
             <div class="barre-verticale"></div>
             <h2 class="h2 display-5 fw-bold mb-0 pb-0">Nos réalisations</h2>
@@ -440,7 +440,7 @@
     </section>
 
     <!--Promoteurs-->
-    <section class="container mt-5">
+    <section class="container my-5 ">
         <div class="d-flex flex-lg-wrap align-items-center pb-3 m-5 me-0 ms-4 gap-2">
             <div class="barre-verticale"></div>
             <h2 class="h2 display-5 fw-bold">Promoteurs</h2>
@@ -497,16 +497,15 @@
             <!-- /.col-lg-4 -->
         </div>
         <!-- /.row -->
-        <hr class="featurette-divider"/>
     </section>
 
     <!--Adhésion-->
     <section class="py-5 bg-gdd text-center text-white d-flex align-items-center adhesion"
              style="height: 90vh; transition: all 0.5s">
         <div class="container">
-            <h2 class="mb-4">Vous êtes entrepreneur <span class="text-black">?</span> Rejoignez Woila Community</h2>
+            <h2 class="mb-4">Vous êtes entrepreneur <span class="text-black">?</span> Rejoignez <span class="wc">Woila Community</span></h2>
             <br>
-            <a href="/adhesion/" class="btn btn-light mt-4 text-gdd">Adhérer maintenant</a>
+            <a href="{% url 'adhesion' %}" class="btn btn-light mt-4 text-gdd">Adhérer maintenant</a>
         </div>
     </section>
 
