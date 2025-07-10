@@ -1,5 +1,4 @@
-    <<<<<<< HEAD .bg-gdd {
-    ======= {
+    .bg-gdd {
         color: #010b27 !important;
     }
     /*navbar style*/
@@ -11,10 +10,10 @@
     }
     /**/
     .bg-gdd {
-        >>>>>>>106d9b4f68a99d14f490b096b2123f63e306a090 background-color: #286CDB !important;
+       background-color: #286CDB !important;
     }
     .text-gdd {
-        color: #286CDB !important;
+        color: #0a53be !important;
         border-bottom: 5px solid white !important;
     }
     .bg-gdd:hover {
@@ -22,7 +21,7 @@
         color: black !important;
     }
     nav .active {
-        color: #286CDB !important;
+        color: #0a53be !important;
     }
     .carousel-overlay {
         background-color: rgba(0, 0, 0, 0.658);
@@ -63,3 +62,21 @@
         background-color: #0a53be !important;
         color: white !important;
     }
+{
+    color: #010b27 !important;
+}
+
+.brand{
+    animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.realisation .text-gdd {
+    border-bottom: none !important;
+}
+
+footer a:hover{
+    color: #0a53be !important;
+}

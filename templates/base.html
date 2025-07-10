@@ -2,10 +2,9 @@
 {% load i18n %}
 
 
-
 <!DOCTYPE html>
 
-<html lang="fr" data-bs-theme="auto" class="h-100">
+<html lang="fr" data-bs-theme="auto" class="min-vh-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,9 +17,33 @@
     <link rel="stylesheet" href="{% static 'css/carousel.css' %}">
     <link rel="stylesheet" href="{% static 'css/cover.css' %}">
     <link rel="stylesheet" href="{% static 'css/blog.css' %}">
+    <!-- Swiper CDN -->
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+
+    <style>
+        .swiper {
+            width: 100%;
+            padding: 40px 0;
+        }
+
+        .swiper-slide {
+            background: #eee;
+            border-radius: 8px;
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+    </style>
 </head>
+
+
 <body class="h-100 py-0">
 <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
     <symbol id="check2" viewBox="0 0 16 16">
@@ -121,34 +144,39 @@
 
 {% include 'partials/navbar.html' %}
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const links = document.querySelectorAll('.nav-link');
-    const path = window.location.pathname;
+    document.addEventListener('DOMContentLoaded', function () {
+        const links = document.querySelectorAll('.nav-link');
+        const path = window.location.pathname;
 
-    links.forEach(link => {
-      if (link.getAttribute('href') === path) {
-        link.classList.add('active');
-      } else {
-        link.classList.remove('active');
-      }
+        links.forEach(link => {
+            if (link.getAttribute('href') === path) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
     });
-  });
 </script>
 
 
 {% block content %}
 
-{% if user.is_authenticated %}
-<p>Bonjour, {{ user.username }}!</p>
-<a href="{% url 'membres:logout' %}">Se déconnecter</a>
-{% else %}
-<a href="/connexion.html ">Se connecter</a>
-<a href="/connexion.html">S'inscrire</a>
-{% endif %}
+    {% if user.is_authenticated %}
+        <p>Bonjour, {{ user.username }}!</p>
+        <a href="{% url 'membres:logout' %}">Se déconnecter</a>
+    {% else %}
+        <a href="/connexion.html ">Se connecter</a>
+        <a href="/connexion.html">S'inscrire</a>
+    {% endif %}
 {% endblock %}
 {% include 'partials/footer.html' %}
 
+
+<!-- Swiper JS -->
 <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 <script src="{% static 'js/color-modes.js' %}"></script>
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+
 </body>
 </html>

@@ -1,4 +1,5 @@
 {% load static %}
+
 <header class="">
     <nav class="navbar navbar-expand-lg bg-body-tertiary bg-opacity-75 pb-0 mb-0 fixed-top">
         <div class="container-fluid">
@@ -14,14 +15,56 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse d-lg-flex justify-content-center" id="navbarsExample11">
-                <div class="navbar-brand d-flex align-items-center col-lg-2 me-0 pb-0">
+                <div class="navbar-brand d-flex align-items-center col-lg-2 me-0 py-0">
                     <img class="float-md-start mb-0 rounded-2 md-2" src="{% static 'images/logo.jpg' %}"
                          width="40"
                          height="40"
                          alt="logo"/>
-                    <h5 class="h5"> Woila Community</h5>
+                    <p>&nbsp;&nbsp;</p>
+                    <h5 class="h5 brand">&nbsp; </h5>
                 </div>
-                <ul class="nav-masthead float-md-end mt-2 gap-4 navbar-nav col-lg-7 justify-content-lg-center">
+                <script>
+                    const brand = document.querySelector('.brand');
+                    const words = ['Woila Community', 'Woila Association', 'Woila Team'];
+                    let wordIndex = 0;
+                    let letterIndex = 0;
+                    let loopCount = 0;
+                    const maxLoops = 5;
+
+                    function type() {
+                        if (loopCount >= maxLoops) {
+                            // Stop la boucle, tu peux aussi afficher un message ou laisser le dernier texte affiché
+                            return;
+                        }
+
+                        if (wordIndex >= words.length) {
+                            wordIndex = 0;
+                            loopCount++;
+                            if (loopCount >= maxLoops) return;
+                        }
+
+                        const currentWord = words[wordIndex];
+
+                        if (letterIndex < currentWord.length) {
+                            brand.textContent += currentWord.charAt(letterIndex);
+                            letterIndex++;
+                            setTimeout(type, 120);
+                        } else {
+                            setTimeout(() => {
+                                brand.textContent = '';
+                                letterIndex = 0;
+                                wordIndex++;
+                                type();
+                            }, 1500);
+                        }
+                    }
+
+                    window.onload = () => {
+                        type();
+                    }
+                </script>
+
+                <ul class="float-md-end mt-2 gap-4 navbar-nav col-lg-7 justify-content-lg-center">
                     <li class="nav-item">
                         <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{% url 'accueil' %}">Accueil</a>
                     </li>
@@ -32,13 +75,13 @@
                         <a class="nav-link fw-bold py-1 px-0" href="#">Nos actions</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold py-1 px-0" href="#">Actualité</a>
+                        <a class="nav-link fw-bold py-1 px-0" href="{% url 'blog' %}">Actualité</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold py-1 px-0" href="#">Adhésion</a>
+                        <a class="nav-link fw-bold py-1 px-0" href="{% url 'adhesion' %}">Adhésion</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link fw-bold py-1 px-0" href="#">Espace membres</a>
+                        <a class="nav-link fw-bold py-1 px-0" href="{% url 'dashboard' %}">Espace membres</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-bold py-1 px-0" href="#">Galerie</a>
@@ -50,7 +93,7 @@
 
                 </ul>
                 <div class="d-lg-flex col-lg-3 justify-content-lg-end">
-                    <p class="btn bg-outline-primary"><a href="#" class="link-light">S'inscrire</a></p>
+                    <p class="btn bg-outline-primary"><a href="" class="link-light">S'inscrire</a></p>
                     <p class="text-gdd">|</p>
                     <p class="btn bg-outline-primary"><a href="#" class="link-light">Se connecter</a></p>
                 </div>
