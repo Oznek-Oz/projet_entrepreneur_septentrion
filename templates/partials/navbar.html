@@ -1,24 +1,61 @@
 {% load static %}
-<header class="mb-auto pt-3">
-        <div class="d-flex justify-content-around">
-          <div class="d-flex align-items-center">
-            <img
-              class="float-md-start mb-0 rounded-2 mb-md-2"
-              src="{% static 'images/logo.jpg' %}"
-              width="40"
-              height="40"
-            />
-            <h3>Entrepreneur</h3>
-          </div>
-          <nav class="nav nav-masthead justify-content-center float-md-end mt-2">
-            <a
-              class="nav-link fw-bold py-1 px-0 active"
-              aria-current="page"
-              href="#"
-              >Home</a
+<header class="">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-opacity-75 pb-0 mb-0 fixed-top">
+        <div class="container-fluid">
+            <button
+                    class="navbar-toggler"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarsExample11"
+                    aria-controls="navbarsExample11"
+                    aria-expanded="false"
+                    aria-label="Toggle navigation"
             >
-            <a class="nav-link fw-bold py-1 px-0" href="#">Features</a>
-            <a class="nav-link fw-bold py-1 px-0" href="#">Contact</a>
-          </nav>
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse d-lg-flex justify-content-center" id="navbarsExample11">
+                <div class="navbar-brand d-flex align-items-center col-lg-2 me-0 pb-0">
+                    <img class="float-md-start mb-0 rounded-2 md-2" src="{% static 'images/logo.jpg' %}"
+                         width="40"
+                         height="40"
+                         alt="logo"/>
+                    <h5 class="h5"> Woila Community</h5>
+                </div>
+                <ul class="nav-masthead float-md-end mt-2 gap-4 navbar-nav col-lg-7 justify-content-lg-center">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0 active" aria-current="page" href="{% url 'accueil' %}">Accueil</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="{% url 'about' %}">À propos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Nos actions</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Actualité</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Adhésion</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Espace membres</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Galerie</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold py-1 px-0" href="#">Contact</a>
+                    </li>
+
+
+                </ul>
+                <div class="d-lg-flex col-lg-3 justify-content-lg-end">
+                    <p class="btn bg-outline-primary"><a href="#" class="link-light">S'inscrire</a></p>
+                    <p class="text-gdd">|</p>
+                    <p class="btn bg-outline-primary"><a href="#" class="link-light">Se connecter</a></p>
+                </div>
+            </div>
         </div>
-      </header>
+    </nav>
+
+</header>

@@ -30,8 +30,10 @@ ALLOWED_HOSTS = []
 
 LOGIN_REDIRECT_URL = "accueil:home"
 LOGOUT_REDIRECT_URL = "accueil:home"
+
 # Application definition
 
+TAILWIND_APP_NAME = 'theme'
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -41,7 +43,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "accueil",
     "membres",
-    "adhesion"
+    "tailwind",
+    "adhesion",
 ]
 
 MIDDLEWARE = [
