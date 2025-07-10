@@ -1,18 +1,21 @@
-.bg-gdd{
+.bg-gdd {
     background-color: #286CDB !important;
 }
-.text-gdd{
-    color: #286CDB !important;
-}
-.bg-gdd:hover{
-    background-color: #f0f0f0 !important;
-    color: black !important;
-}
-nav .active{
+
+.text-gdd {
     color: #286CDB !important;
 }
 
-.carousel-overlay{
+.bg-gdd:hover {
+    background-color: #f0f0f0 !important;
+    color: black !important;
+}
+
+nav .active {
+    color: #286CDB !important;
+}
+
+.carousel-overlay {
     background-color: rgba(0, 0, 0, 0.658);
     position: absolute;
     top: 0;
@@ -26,6 +29,7 @@ nav .active{
     align-items: center;
     pointer-events: none;
 }
-.carousel-item img{
+
+.carousel-item img {
     height: 100vh !important;
 }

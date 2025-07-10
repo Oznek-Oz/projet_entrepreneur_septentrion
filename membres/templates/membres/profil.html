@@ -1,21 +1,76 @@
 {% extends "base.html" %}
 {% block content %}
+
+<style>
+    @keyframes fadeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-form {
+        animation: fadeSlideIn 0.6s ease-in-out;
+        background: #fff;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+        border-color: #0d6efd;
+    }
+
+    .form-label i {
+        margin-right: 6px;
+    }
+
+    .btn-primary {
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: scale(1.03);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.3);
+    }
+
+    body {
+        background-color:rgb(26, 53, 80);
+    }
+</style>
+
+<!-- ✅ Formulaire avec animation et design -->
 <div class="container py-5">
-    <h3 class="mb-4 text-primary">Mettre à jour mon profil</h3>
-    <form>
-        <div class="mb-3">
-            <label for="nom" class="form-label">Nom complet</label>
-            <input type="text" class="form-control" id="nom">
-        </div>
-        <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input type="email" class="form-control" id="email">
-        </div>
-        <div class="mb-3">
-            <label for="ville" class="form-label">Ville</label>
-            <input type="text" class="form-control" id="ville">
-        </div>
-        <button type="submit" class="btn btn-primary">Mettre à jour</button>
-    </form>
+    <div class="profile-form mx-auto col-md-8 col-lg-6">
+        <h3 class="mb-4 text-primary text-center fw-bold">
+            <i class="bi bi-person-circle"></i> Mettre à jour mon profil
+        </h3>
+        <form>
+            <div class="mb-3">
+                <label for="nom" class="form-label"><i class="bi bi-person-fill"></i>Nom complet</label>
+                <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom complet">
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label"><i class="bi bi-envelope-fill"></i>Email</label>
+                <input type="email" class="form-control" id="email" placeholder="exemple@mail.com">
+            </div>
+            <div class="mb-3">
+                <label for="ville" class="form-label"><i class="bi bi-geo-alt-fill"></i>Ville</label>
+                <input type="text" class="form-control" id="ville" placeholder="Ville de résidence">
+            </div>
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary fw-bold">
+                    <i class="bi bi-save-fill"></i> Mettre à jour
+                </button>
+            </div>
+        </form>
+    </div>
 </div>
+
 {% endblock %}
+
