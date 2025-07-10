@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     "accueil",
     "membres",
     "tailwind",
-
+    "adhesion",
 ]
 
 MIDDLEWARE = [

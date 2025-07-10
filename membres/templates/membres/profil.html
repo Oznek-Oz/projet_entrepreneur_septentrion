@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <h3 class="mb-4 text-primary">Mettre à jour mon profil</h3>
+    <form>
+        <div class="mb-3">
+            <label for="nom" class="form-label">Nom complet</label>
+            <input type="text" class="form-control" id="nom">
+        </div>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="email">
+        </div>
+        <div class="mb-3">
+            <label for="ville" class="form-label">Ville</label>
+            <input type="text" class="form-control" id="ville">
+        </div>
+        <button type="submit" class="btn btn-primary">Mettre à jour</button>
+    </form>
+</div>
+{% endblock %}

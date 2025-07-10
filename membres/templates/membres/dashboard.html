@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <h2 class="text-center mb-4">Bienvenue {{ user.username }}</h2>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <a href="{% url 'profil' %}" class="text-decoration-none">
+                <div class="card border-primary h-100 text-center p-3">
+                    <h5 class="text-primary">Mon Profil</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'annuaire' %}" class="text-decoration-none">
+                <div class="card border-success h-100 text-center p-3">
+                    <h5 class="text-success">Annuaire des Membres</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'publications' %}" class="text-decoration-none">
+                <div class="card border-info h-100 text-center p-3">
+                    <h5 class="text-info">Mes Publications</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'forum' %}" class="text-decoration-none">
+                <div class="card border-warning h-100 text-center p-3">
+                    <h5 class="text-warning">Forum / Discussions</h5>
+                </div>
+            </a>
+        </div>
+        <div class="col">
+            <a href="{% url 'ressources' %}" class="text-decoration-none">
+                <div class="card border-dark h-100 text-center p-3">
+                    <h5 class="text-dark">Ressources exclusives</h5>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
