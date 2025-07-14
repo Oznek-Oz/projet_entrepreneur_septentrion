@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     "blog",
     "membres",
     "adhesion",
+    "galerie",
+    "contact",
 ]
 
 MIDDLEWARE = [
