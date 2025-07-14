@@ -27,4 +27,6 @@ urlpatterns = [
     path("polls/", include("polls.urls")),
     path("adhesion/", include("adhesion.urls")),
     path("blog/", include("blog.urls")),  # Include the blog app's URLs
+    path("contact/", include('contact.urls')),
+    path("galerie/", include("galerie.urls")),
 ]

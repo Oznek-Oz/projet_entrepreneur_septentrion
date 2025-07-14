@@ -73,6 +73,7 @@
         background-color: #0a53be !important;
         color: white !important;
     }
+<<<<<<< HEAD
     
     {
         color: #010b27 !important;
@@ -95,3 +96,23 @@
     footer a:hover {
         color: #0a53be !important;
     }
+=======
+{
+    color: #010b27 !important;
+}
+
+.brand{
+    animation: blink 1s step-start infinite;
+}
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.realisation .text-gdd {
+    border-bottom: none !important;
+}
+
+footer a:hover{
+    color: #0a53be !important;
+}
+>>>>>>> 9be6f1cd5468ad6c96c12e69e95d35726b804f3c

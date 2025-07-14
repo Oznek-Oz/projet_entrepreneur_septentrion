@@ -1,0 +1,109 @@
+{% extends 'base.html' %} {% block content %}
+
+<h1 class="display-4 fw-normal text-body-emphasis text-center mb-5">
+  NOUS CONTACTEZ
+</h1>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <!-- Formulaire de contact -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm border-primary d-flex flex-column">
+        <div class="card-header py-3 text-bg-primary border-primary">
+          <h4 class="my-0 fw-normal text-center">Formulaire de contact</h4>
+        </div>
+        <div class="card-body flex-grow-1">
+          <form action="#" method="POST">
+            <div class="mb-3">
+              <label for="nom" class="form-label">Nom:</label>
+              <input
+                type="text"
+                id="nom"
+                name="nom"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">E-mail:</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="message" class="form-label">Message:</label>
+              <textarea
+                id="message"
+                name="message"
+                class="form-control"
+                rows="4"
+                required
+              ></textarea>
+            </div>
+            <button type="submit" class="w-100 btn btn-primary">Envoyer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte d'appel -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm border-primary d-flex flex-column">
+        <div class="card-header py-3 text-bg-primary border-primary">
+          <h4 class="my-0 fw-normal text-center">Appelez</h4>
+        </div>
+        <div
+          class="card-body flex-grow-1 d-flex flex-column justify-content-between"
+        >
+          <div>
+            <h5 class="card-title">Contact</h5>
+            <ul class="list-unstyled">
+              <li>Disponible tous les jours</li>
+              <li>Support téléphonique et email</li>
+              <li>Réponse rapide garantie</li>
+            </ul>
+          </div>
+          <button type="button" class="w-100 btn btn-primary mt-3">
+            Contactez-nous
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carte Google Map -->
+    <div class="col-md-4 mb-4">
+      <div class="card h-100 shadow-sm border-primary d-flex flex-column">
+        <div class="card-header py-3 text-bg-primary border-primary">
+          <h4 class="my-0 fw-normal text-center">Nous trouver</h4>
+        </div>
+        <div class="card-body flex-grow-1">
+          <p class="mb-1">
+            <strong>Adresse :</strong> rue Sali Dairou, Maroua, Cameroun
+          </p>
+          <p class="mb-1"><strong>Téléphone :</strong> TsimiKenzoSavant</p>
+          <p class="mb-3">
+            <strong>Email :</strong> contact@TsimiKenzoSavant.com
+          </p>
+          <div class="ratio ratio-4x3">
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3153.406697220799!2d-122.41941508468191!3d37.7749297797599!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x808f7e2ae34d7d81%3A0x4a5e3e67f4d3a084!2sSan+Francisco%2C+CA!5e0!3m2!1sen!2sus!4v1614554455331!5m2!1sen!2sus"
+              width="100%"
+              height="100%"
+              style="border: 0"
+              allowfullscreen=""
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+            >
+            </iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
