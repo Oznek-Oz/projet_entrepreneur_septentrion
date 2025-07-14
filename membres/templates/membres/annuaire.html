@@ -1,10 +1,103 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+<!-- Styles personnalisés -->
+<style>
+    .member-card {
+        animation: fadeSlideIn 0.5s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border: none;
+    }
+
+    .member-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes fadeSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid #17a2b8;
+    }
+
+    .social-icons a {
+        color: #17a2b8;
+        margin-right: 10px;
+        font-size: 18px;
+    }
+
+    .search-bar input,
+    .search-bar select {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
 <div class="container py-5">
-    <h3 class="mb-4 text-success">Annuaire des Membres</h3>
-    <div class="list-group">
-        <a href="#" class="list-group-item list-group-item-action">Mr Tsimi lazare-president</a>
-        <a href="#" class="list-group-item list-group-item-action">Tsimi Ndah Lazare - Mainto Studio</a>
+    <h2 class="text-center text-success mb-4"><i class="fas fa-address-book"></i> Annuaire des Membres</h2>
+
+    <!-- Barre de recherche -->
+    <form method="get" class="search-bar d-flex flex-wrap justify-content-center mb-4">
+        <input type="text" name="nom" placeholder="Nom..." class="form-control w-auto">
+        <input type="text" name="ville" placeholder="Ville..." class="form-control w-auto">
+        <input type="text" name="secteur" placeholder="Secteur d’activité..." class="form-control w-auto">
+        <select name="statut" class="form-control w-auto">
+            <option value="">Tous les statuts</option>
+            <option value="membre">Membre</option>
+            <option value="président">Président</option>
+            <option value="partenaire">Partenaire</option>
+        </select>
+        <button type="submit" class="btn btn-info">Rechercher</button>
+    </form>
+
+    <!-- Liste des membres -->
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+        {% for membre in membres %}
+        <div class="col">
+            <div class="card member-card p-3 h-100">
+                <div class="d-flex align-items-center mb-3">
+                    <img src="{{ membre.photo.url }}" alt="Photo" class="profile-pic me-3">
+                    <div>
+                        <h5 class="mb-0">{{ membre.nom }}</h5>
+                        <small class="text-muted">{{ membre.ville }} | {{ membre.secteur }}</small>
+                    </div>
+                </div>
+                <p class="text-muted" style="min-height: 60px;">{{ membre.mini_cv|truncatewords:25 }}</p>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="social-icons">
+                        {% if membre.facebook %}<a href="{{ membre.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>{% endif %}
+                        {% if membre.linkedin %}<a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>{% endif %}
+                        {% if membre.twitter %}<a href="{{ membre.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
+                    </div>
+                    <a href="{% url 'contacter_membre' membre.id %}" class="btn btn-outline-success btn-sm">Contacter</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col">
+            <div class="alert alert-warning w-100">Aucun membre trouvé avec ces critères.</div>
+        </div>
+        {% endfor %}
+
     </div>
 </div>
+
 {% endblock %}

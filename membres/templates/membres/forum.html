@@ -1,7 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
+
+<!-- CSS personnalisé -->
+<style>
+    .forum-card {
+        animation: fadeInSlide 0.5s ease;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .forum-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes fadeInSlide {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .forum-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .forum-header h3 {
+        color: #17a2b8;
+        font-weight: bold;
+    }
+
+    .btn-add-topic {
+        background-color: #17a2b8;
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-add-topic:hover {
+        background-color: #138496;
+    }
+</style>
+
 <div class="container py-5">
-    <h3 class="mb-4 text-info">[Titre de la Section]</h3>
-    <p>Contenu à venir : section de / forum </p>
+    <div class="forum-header mb-4">
+        <h3><i class="fas fa-comments"></i> Forum & Discussions</h3>
+        <a href="" class="btn btn-add-topic">
+            <i class="fas fa-plus-circle"></i> Nouveau sujet
+        </a>
+    </div>
+
+    <!-- Liste des discussions -->
+    <div class="list-group">
+
+        <!-- Exemple de sujet -->
+        <a href="" class="list-group-item forum-card list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Comment utiliser Django avec React ?</h5>
+                <small>il y a 2 heures</small>
+            </div>
+            <p class="mb-1 text-muted">Partagez vos expériences et ressources sur Django + React.</p>
+            <small><i class="fas fa-user-circle"></i> Posté par: Kenzo T.</small>
+        </a>
+
+        <a href="#" class="list-group-item forum-card list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">Vos projets en cours ?</h5>
+                <small>il y a 1 jour</small>
+            </div>
+            <p class="mb-1 text-muted">Un endroit pour partager les projets en développement.</p>
+            <small><i class="fas fa-user-circle"></i> Posté par: Aniassing Savant</small>
+        </a>
+
+        <!-- Ajoute d'autres discussions dynamiquement -->
+
+    </div>
 </div>
+
+
 {% endblock %}

@@ -1,7 +1,40 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="container py-5">
-    <h3 class="mb-4 text-info">[Titre de la Section]</h3>
-    <p>Contenu à venir pour ressources</p>
+    <h3 class="mb-4 text-primary">📚 Ressources Exclusives</h3>
+    <p class="mb-5">Accédez à nos modèles, guides, documents utiles et contacts spécialisés.</p>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📄 Modèle de CV</h5>
+                    <p class="card-text">Télécharge un modèle professionnel pour ton CV.</p>
+                    <a href="#" class="btn btn-outline-primary">Télécharger</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">📘 Guide de rédaction</h5>
+                    <p class="card-text">Conseils pour rédiger lettres, rapports, et demandes.</p>
+                    <a href="#" class="btn btn-outline-primary">Voir le guide</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">👥 Contacts utiles</h5>
+                    <p class="card-text">Liste des personnes ressources dans chaque département.</p>
+                    <a href="#" class="btn btn-outline-primary">Voir les contacts</a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
+
