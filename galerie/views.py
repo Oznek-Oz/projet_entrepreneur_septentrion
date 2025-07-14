@@ -1,3 +1,7 @@
 from django.shortcuts import render
 
-# Create your views here.
+def galerie(request):
+    """
+    Render the gallery page.
+    """
+    return render(request, 'galerie/galery.html')
