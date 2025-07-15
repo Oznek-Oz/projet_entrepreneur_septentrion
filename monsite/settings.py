@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = "accueil:home"
 LOGOUT_REDIRECT_URL = "accueil:home"
 
+AUTH_USER_MODEL = 'membres.Membre'
+
 # Application definition
 
 TAILWIND_APP_NAME = 'theme'
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     "adhesion",
     "galerie",
     "contact",
+    "newsletter",
 ]
 
 MIDDLEWARE = [

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2>Nouvelle discussion</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="titre" class="form-label">Titre de la discussion</label>
+            <input type="text" name="titre" id="titre" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="contenu" class="form-label">Premier message</label>
+            <textarea name="contenu" id="contenu" class="form-control" rows="4" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-success">Créer la discussion</button>
+        <a href="{% url 'forum_list' %}" class="btn btn-secondary ms-2">Annuler</a>
+    </form>
+</div>
+{% endblock %}
+
