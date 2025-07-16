@@ -41,7 +41,18 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
     <link rel="stylesheet" href="{% static 'css/theme.css' %}" />
 
+    <!-- Animate.css pour des effets supplémentaires -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
+      /* Transition douce entre les pages */
+      body {
+        opacity: 0;
+        transition: opacity 0.5s ease-in;
+      }
+      body.page-loaded {
+        opacity: 1;
+      }
+
       .swiper {
         width: 100%;
         padding: 40px 0;
@@ -59,7 +70,7 @@
     </style>
   </head>
 
-  <body class="h-100 py-0">
+  <body class="h-100 py-0"><br><br><br>
     <svg xmlns="http://www.w3.org/2000/svg" class="d-none">
       <symbol id="check2" viewBox="0 0 16 16">
         <path
@@ -158,7 +169,6 @@
     </div>
 
     {% block navbar %} {% include 'partials/navbar.html' %} {% endblock %}
-
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const links = document.querySelectorAll(".nav-link");
@@ -178,20 +188,23 @@
     <p>Bonjour, {{ user.username }}!</p>
     <a href="{% url 'membres:logout' %}">Se déconnecter</a>
     {% else %}
-    <a href="/connexion.html ">Se connecter</a>
-    <a href="/connexion.html">S'inscrire</a>
-    {% endif %} {% endblock %} {% block footer %} {% include
-    'partials/footer.html' %} {% endblock %}
+    <a href="{% url 'membres:login' %}">Se connecter</a>
+    <a href="{% url 'adhesion:adhesion' %}">S'inscrire</a>
+
+    {% endif %} {% endblock %} {% block footer %}
+      {% include 'partials/footer.html' %} {% endblock %}
 
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
-      AOS.init({
-        duration: 1200, // durée des animations en ms
-        offset: 200, // décalage avant le déclenchement
-        delay: 100, // délai de départ pour chaque animation
-        once: false, // si true, l'animation ne se joue qu'une fois
-        mirror: true, // si true, joue l'animation au scroll vers le haut aussi
-        easing: "ease-in-out", // type d’accélération
+      // Transition douce entre les pages
+      document.addEventListener("DOMContentLoaded", function() {
+        document.body.classList.add("page-loaded");
+        AOS.init({
+          duration: 900,
+          once: false,
+          easing: 'ease-in-out',
+          mirror: true,
+        });
       });
     </script>
     <!-- Swiper JS -->

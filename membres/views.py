@@ -31,7 +31,7 @@ def connexion(request):
 def dashboard(request):
     return render(request, 'membres/dashboard.html')
 
-
+@login_required
 def profil(request):
     return render(request, 'membres/profil.html')
 
@@ -39,15 +39,15 @@ def profil(request):
 def annuaire(request):
     return render(request, 'membres/annuaire.html')
 
-
+@login_required
 def publications(request):
     return render(request, 'membres/publications.html')
 
-
+@login_required
 def ressources(request):
     return render(request, 'membres/ressources.html')
 
-
+@login_required
 def forum(request):
     return render(request, 'membres/forum.html')
 

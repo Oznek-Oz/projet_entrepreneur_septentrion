@@ -14,7 +14,7 @@
     }
     .text-gdd {
         color: #0a53be !important;
-        border-bottom: 5px solid white !important;
+        /*border-bottom: 5px solid white !important;*/
     }
     .bg-gdd:hover {
         background-color: #f0f0f0 !important;

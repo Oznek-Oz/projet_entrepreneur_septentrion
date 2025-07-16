@@ -1,4 +1,8 @@
-# membres/models.py
+"""
+Modèles pour la gestion des membres de la communauté.
+Inclut un utilisateur personnalisé (Membre) avec de nombreux champs de profil.
+"""
+
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.utils import timezone
@@ -6,6 +10,10 @@ from django.conf import settings
 
 
 class MembreManager(BaseUserManager):
+    """
+    Manager personnalisé pour le modèle Membre.
+    Permet de créer des utilisateurs et des superutilisateurs avec des champs personnalisés.
+    """
     def create_user(self, username, email, password=None, **extra_fields):
         if not username:
             raise ValueError("Le nom d'utilisateur est obligatoire")
@@ -18,28 +26,32 @@ class MembreManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    """def create_superuser(self, username, email, password, **extra_fields):
+    def create_superuser(self, username, email, password, **extra_fields):
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)
         return self.create_user(username, email, password, **extra_fields)
-"""
+
 
 class Membre(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=100, unique=True)
-    nom = models.CharField(max_length=100)
-    prenom = models.CharField(max_length=100)
-    email = models.EmailField(unique=True)
-    password = models.CharField(max_length=100)
-    photo = models.ImageField(upload_to='membres/photos/', null=True, blank=True)
-    ville = models.CharField(max_length=100, blank=True)
-    profession = models.CharField(max_length=100, blank=True)
-    statut = models.CharField(max_length=50, blank=True)
-    mini_cv = models.TextField(null=True, blank=True)
-    facebook = models.URLField(null=True, blank=True)
-    linkedin = models.URLField(null=True, blank=True)
-    twitter = models.URLField(null=True, blank=True)
+    """
+    Modèle principal représentant un membre de la communauté.
+    Hérite de AbstractBaseUser pour la personnalisation complète de l'utilisateur.
+    """
+    username = models.CharField(max_length=100, unique=True)  # Identifiant unique
+    nom = models.CharField(max_length=100)  # Nom de famille
+    prenom = models.CharField(max_length=100)  # Prénom
+    email = models.EmailField(unique=True)  # Email unique
+    password = models.CharField(max_length=100)  # Mot de passe (haché)
+    photo = models.ImageField(upload_to='membres/photos/', null=True, blank=True)  # Photo de profil
+    ville = models.CharField(max_length=100, blank=True)  # Ville de résidence
+    profession = models.CharField(max_length=100, blank=True)  # Profession
+    statut = models.CharField(max_length=50, blank=True)  # Statut (étudiant, pro, etc.)
+    mini_cv = models.TextField(null=True, blank=True)  # Mini CV
+    facebook = models.URLField(null=True, blank=True)  # Lien Facebook
+    linkedin = models.URLField(null=True, blank=True)  # Lien LinkedIn
+    twitter = models.URLField(null=True, blank=True)  # Lien Twitter
 
-    numero_adherent = models.CharField(max_length=20, unique=True, editable=False, blank=True)
+    numero_adherent = models.CharField(max_length=20, unique=True, editable=False, blank=True)  # Numéro d'adhérent généré automatiquement
 
     TYPE_CHOICES = [
         ('etudiant', 'Étudiant'),
@@ -47,7 +59,9 @@ class Membre(AbstractBaseUser, PermissionsMixin):
         ('entrepreneur', 'Entrepreneur'),
         ('autre', 'Autre'),
     ]
-    type_adhesion = models.CharField(max_length=20, choices=TYPE_CHOICES, null=True, blank=True)
+    type_adhesion = models.CharField(max_length=20, choices=TYPE_CHOICES, null=True, blank=True)  # Type d'adhésion
+    confirmation_token = models.CharField(max_length=100, null=True, blank=True, unique=True)
+    is_confirmed = models.BooleanField(default=False)
     date_adhesion = models.DateField(null=True, blank=True)
     montant = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     moyen_paiement = models.CharField(max_length=50, null=True, blank=True)
