@@ -47,38 +47,25 @@
 </style>
 
 <div class="container py-5">
-    <div class="forum-header mb-4">
-        <h3><i class="fas fa-comments"></i> Forum & Discussions</h3>
-        <a href="" class="btn btn-add-topic">
-            <i class="fas fa-plus-circle"></i> Nouveau sujet
-        </a>
+    <h3 class="mb-4 text-info">Forum de la communauté</h3>
+    <div class="mb-3 text-end">
+        <a href="{% url 'forum_create' %}" class="btn btn-primary">Nouveau sujet</a>
     </div>
-
-    <!-- Liste des discussions -->
-    <div class="list-group">
-
-        <!-- Exemple de sujet -->
-        <a href="" class="list-group-item forum-card list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Comment utiliser Django avec React ?</h5>
-                <small>il y a 2 heures</small>
-            </div>
-            <p class="mb-1 text-muted">Partagez vos expériences et ressources sur Django + React.</p>
-            <small><i class="fas fa-user-circle"></i> Posté par: Kenzo T.</small>
-        </a>
-
-        <a href="#" class="list-group-item forum-card list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">Vos projets en cours ?</h5>
-                <small>il y a 1 jour</small>
-            </div>
-            <p class="mb-1 text-muted">Un endroit pour partager les projets en développement.</p>
-            <small><i class="fas fa-user-circle"></i> Posté par: Aniassing Savant</small>
-        </a>
-
-        <!-- Ajoute d'autres discussions dynamiquement -->
-
-    </div>
+    {% if discussions %}
+        <div class="list-group">
+            {% for discussion in discussions %}
+                <a href="{% url 'forum_detail' discussion.pk %}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ discussion.titre }}</h5>
+                        <small>{{ discussion.date_creation|date:"d/m/Y H:i" }}</small>
+                    </div>
+                    <p class="mb-1">Par {{ discussion.auteur.username }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">Aucune discussion pour le moment.</div>
+    {% endif %}
 </div>
 
 

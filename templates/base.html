@@ -184,14 +184,14 @@
       });
     </script>
 
-    {% block content %} {% if user.is_authenticated %}
-    <p>Bonjour, {{ user.username }}!</p>
-    <a href="{% url 'membres:logout' %}">Se déconnecter</a>
+    {% block content %}
+    {% if user.is_authenticated %}
+        <a href="{% url 'membres:logout' %}">Se déconnecter</a>
     {% else %}
-    <a href="{% url 'membres:login' %}">Se connecter</a>
-    <a href="{% url 'adhesion:adhesion' %}">S'inscrire</a>
-
-    {% endif %} {% endblock %} {% block footer %}
+        <a href="{% url 'membres:login' %}">Se connecter</a>
+        <a href="{% url 'adhesion' %}">S'inscrire</a>
+    {% endif %}
+    {% endblock %} {% block footer %}
       {% include 'partials/footer.html' %} {% endblock %}
 
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>

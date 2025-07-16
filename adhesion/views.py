@@ -22,6 +22,11 @@ def adhesion(request):
     - Crée un membre avec un token de confirmation unique.
     - Envoie un email de confirmation avec un lien personnalisé.
     """
+    # Si 
+    if request.user.is_authenticated:
+        return redirect('adhesion')
+
+    # Si l'utilisateur est déjà connecté, on le redirige vers la page d'adhésion
     if request.method == 'POST':
         password = request.POST.get('password')
         confirm = request.POST.get('confirm_password')
@@ -59,7 +64,7 @@ def adhesion(request):
         membre.save()
         # Envoi de l'email de confirmation
         confirmation_url = request.build_absolute_uri(
-            reverse('adhesion:confirmer', args=[membre.confirmation_token])
+            reverse('confirmer', args=[membre.confirmation_token])
         )
         sujet = "Confirmation de votre adhésion à la communauté"
         message = f"Bonjour {membre.prenom or membre.nom},\n\nMerci pour votre demande d'adhésion. Veuillez confirmer votre inscription en cliquant sur le lien suivant :\n{confirmation_url}\n\nBienvenue parmi nous !"

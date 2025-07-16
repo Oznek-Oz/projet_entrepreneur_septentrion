@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -13,7 +13,7 @@ def connexion(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-        #if user is not None and user.is_actif:
+        # if user is not None and user.is_actif:
         if user is not None and user.is_active:
             login(request, user)
             if request.headers.get('x-requested-with') == 'XMLHttpRequest':
@@ -27,9 +27,10 @@ def connexion(request):
     return render(request, 'membres/connexion.html')
 
 
-@login_required
+@login_required(login_url = 'adhesion')
 def dashboard(request):
     return render(request, 'membres/dashboard.html')
+
 
 @login_required
 def profil(request):
@@ -39,17 +40,21 @@ def profil(request):
 def annuaire(request):
     return render(request, 'membres/annuaire.html')
 
+
 @login_required
 def publications(request):
     return render(request, 'membres/publications.html')
+
 
 @login_required
 def ressources(request):
     return render(request, 'membres/ressources.html')
 
+
 @login_required
 def forum(request):
-    return render(request, 'membres/forum.html')
+    return redirect('forum_list')
+    #return render(request, 'membres/forum_list.html')
 
 
 # Liste des discussions
@@ -63,8 +68,8 @@ def forum_list(request):
 @login_required
 def forum_detail(request, pk):
     discussion = get_object_or_404(Discussion, pk=pk)
-    messages = discussion.messages.order_by('date_envoi')
-    return render(request, 'membres/forum_detail.html', {'discussion': discussion, 'messages': messages})
+    messages_list = discussion.messages.order_by('id')
+    return render(request, 'membres/forum_detail.html', {'discussion': discussion, 'messages': messages_list})
 
 
 # Création d'une discussion
@@ -76,7 +81,8 @@ def forum_create(request):
         if titre and contenu:
             discussion = Discussion.objects.create(titre=titre, auteur=request.user)
             Message.objects.create(discussion=discussion, auteur=request.user, contenu=contenu)
-            return redirect(reverse('forum_detail', args=[discussion.id]))
+            return redirect('forum_detail', pk=discussion.pk)
+        messages.error(request, 'Veuillez remplir tous les champs.')
     return render(request, 'membres/forum_form.html')
 
 
@@ -87,15 +93,38 @@ def forum_reply(request, pk):
     if request.method == 'POST':
         contenu = request.POST.get('contenu')
         reponse_a_id = request.POST.get('reponse_a')
-        reponse_a = Message.objects.filter(id=reponse_a_id).first() if reponse_a_id else None
+        reponse_a = None
+        if reponse_a_id:
+            try:
+                reponse_a = Message.objects.get(id=reponse_a_id)
+            except Message.DoesNotExist:
+                reponse_a = None
         if contenu:
-            Message.objects.create(discussion=discussion, auteur=request.user, contenu=contenu, reponse_a=reponse_a)
-    return redirect(reverse('forum_detail', args=[discussion.id]))
+            Message.objects.create(
+                discussion=discussion,
+                auteur=request.user,
+                contenu=contenu,
+                reponse_a=reponse_a
+            )
+            return redirect('forum_detail', pk=discussion.pk)
+        messages.error(request, 'Le message ne peut pas être vide.')
+    return redirect('forum_detail', pk=discussion.pk)
 
 
 # Suppression d'une discussion (admin seulement)
 @user_passes_test(lambda u: u.is_staff)
 def forum_delete(request, pk):
     discussion = get_object_or_404(Discussion, pk=pk)
-    discussion.delete()
-    return redirect('forum_list')
+    if request.user == discussion.auteur or request.user.is_superuser:
+        discussion.delete()
+        return redirect('forum_list')
+    messages.error(request, "Vous n'avez pas le droit de supprimer cette discussion.")
+    return redirect('forum_detail', pk=discussion.pk)
+
+
+@login_required
+# Déconnexion d'un utilisateur
+def deconnexion(request):
+    logout(request)
+    messages.success(request, "Vous avez été déconnecté avec succès.")
+    return redirect('accueil')
