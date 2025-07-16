@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2>{{ discussion.titre }}</h2>
+    <p><strong>Créée par :</strong> {{ discussion.auteur.username }} | <strong>Date :</strong> {{ discussion.date_creation|date:'d/m/Y H:i' }}</p>
+    <hr>
+    <h4>Messages</h4>
+    <ul class="list-group mb-4">
+        {% for message in messages %}
+            <li class="list-group-item">
+                <strong>{{ message.auteur.username }}</strong> <span class="text-muted">({{ message.date_envoi|date:'d/m/Y H:i' }})</span><br>
+                {{ message.contenu }}
+                {% if message.reponse_a %}
+                    <div class="ms-4 border-start ps-2 mt-2">
+                        <em>En réponse à :</em> {{ message.reponse_a.contenu|truncatechars:50 }}
+                    </div>
+                {% endif %}
+                <form method="post" action="{% url 'forum_reply' discussion.id %}" class="mt-2">
+                    {% csrf_token %}
+                    <input type="hidden" name="reponse_a" value="{{ message.id }}">
+                    <div class="input-group">
+                        <input type="text" name="contenu" class="form-control" placeholder="Répondre..." required>
+                        <button type="submit" class="btn btn-outline-primary">Répondre</button>
+                    </div>
+                </form>
+            </li>
+        {% empty %}
+            <li class="list-group-item">Aucun message pour cette discussion.</li>
+        {% endfor %}
+    </ul>
+    <hr>
+    <h4>Ajouter un message</h4>
+    <form method="post" action="{% url 'forum_reply' discussion.id %}">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <input type="text" name="contenu" class="form-control" placeholder="Votre message..." required>
+            <button type="submit" class="btn btn-success">Envoyer</button>
+        </div>
+    </form>
+    <a href="{% url 'forum_list' %}" class="btn btn-secondary mt-3">Retour au forum</a>
+</div>
+{% endblock %}
+

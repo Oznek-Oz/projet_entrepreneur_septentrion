@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2>Forum - Discussions</h2>
+    <a href="{% url 'forum_create' %}" class="btn btn-primary mb-3">Nouvelle discussion</a>
+    <ul class="list-group">
+        {% for discussion in discussions %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <a href="{% url 'forum_detail' discussion.id %}">{{ discussion.titre }}</a>
+                <span class="badge bg-secondary">{{ discussion.auteur.username }}</span>
+                {% if user.is_staff %}
+                    <form method="post" action="{% url 'forum_delete' discussion.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
+                {% endif %}
+            </li>
+        {% empty %}
+            <li class="list-group-item">Aucune discussion pour le moment.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}
+

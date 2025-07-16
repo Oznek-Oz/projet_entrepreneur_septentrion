@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+<style>
+    .google-form {
+        max-width: 420px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(60,60,60,0.08);
+        padding: 32px 32px 24px 32px;
+        font-family: 'Roboto', Arial, sans-serif;
+    }
+    .google-form h2 {
+        font-weight: 500;
+        margin-bottom: 24px;
+        color: #1a73e8;
+        text-align: center;
+    }
+    .google-form .form-group {
+        margin-bottom: 22px;
+        position: relative;
+    }
+    .google-form label {
+        font-size: 1rem;
+        color: #444;
+        font-weight: 500;
+        margin-bottom: 6px;
+        display: block;
+    }
+    .google-form input, .google-form select {
+        width: 100%;
+        padding: 12px 10px;
+        border: 1px solid #dfe1e5;
+        border-radius: 6px;
+        font-size: 1rem;
+        background: #f8fafc;
+        transition: border-color 0.2s;
+        outline: none;
+    }
+    .google-form input:focus, .google-form select:focus {
+        border-color: #1a73e8;
+        background: #fff;
+    }
+    .google-form .hidden {
+        display: none;
+    }
+    .google-form button {
+        width: 100%;
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 12px;
+        font-size: 1.1rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .google-form button:hover {
+        background: #1765c1;
+    }
+</style>
+<div class="google-form">
+    <h2>Faire un don</h2>
+    <form method="post" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-group">
+            {{ form.nom.label_tag }}
+            {{ form.nom }}
+            {% for error in form.nom.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.email.label_tag }}
+            {{ form.email }}
+            {% for error in form.email.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.montant.label_tag }}
+            {{ form.montant }}
+            {% for error in form.montant.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group">
+            {{ form.methode.label_tag }}
+            {{ form.methode }}
+            {% for error in form.methode.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div class="form-group" id="div_telephone">
+            {{ form.telephone.label_tag }}
+            {{ form.telephone }}
+            {% for error in form.telephone.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+        </div>
+        <div id="cb_fields">
+            <div class="form-group">
+                {{ form.nom_carte.label_tag }}
+                {{ form.nom_carte }}
+                {% for error in form.nom_carte.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.numero_carte.label_tag }}
+                {{ form.numero_carte }}
+                {% for error in form.numero_carte.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.expiration.label_tag }}
+                {{ form.expiration }}
+                {% for error in form.expiration.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+            <div class="form-group">
+                {{ form.cvv.label_tag }}
+                {{ form.cvv }}
+                {% for error in form.cvv.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+            </div>
+        </div>
+        <button type="submit">Faire un don</button>
+    </form>
+</div>
+<script>
+    function updateFields() {
+        const methode = document.getElementById('id_methode').value;
+        const divTel = document.getElementById('div_telephone');
+        const cbFields = document.getElementById('cb_fields');
+        if (methode === 'orange_money' || methode === 'mtn_money') {
+            divTel.classList.remove('hidden');
+            cbFields.classList.add('hidden');
+        } else if (methode === 'carte') {
+            divTel.classList.add('hidden');
+            cbFields.classList.remove('hidden');
+        } else {
+            divTel.classList.add('hidden');
+            cbFields.classList.add('hidden');
+        }
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        updateFields();
+        document.getElementById('id_methode').addEventListener('change', updateFields);
+    });
+</script>
+{% endblock %}
