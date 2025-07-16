@@ -52,7 +52,7 @@
             </ul>
         </div>
         <div class="col-md-5 offset-md-1 mb-3">
-            <form method="post" action="{% url 'inscription_newsletter' %}">
+            <form id="newsletter-form" method="post" action="{% url 'inscription_newsletter' %}">
                 {% csrf_token %}
                 <h5>Souscrire à notre newsletter</h5>
                 <p>Monthly digest of what's new and exciting from us.</p>
@@ -69,6 +69,33 @@
                     <button class="btn btn-primary" type="submit">Subscribe</button>
                 </div>
             </form>
+            <div id="newsletter-message" class="mt-2"></div>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const form = document.getElementById('newsletter-form');
+                const messageDiv = document.getElementById('newsletter-message');
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(form);
+                    fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'X-CSRFToken': formData.get('csrfmiddlewaretoken'),
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        messageDiv.innerHTML = `<div class="alert ${data.success ? 'alert-success' : 'alert-warning'} alert-dismissible fade show" role="alert">${data.message}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button></div>`;
+                        if(data.success) form.reset();
+                    })
+                    .catch(() => {
+                        messageDiv.innerHTML = '<div class="alert alert-danger alert-dismissible fade show" role="alert">Erreur lors de l\'inscription. Veuillez réessayer.<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Fermer"></button></div>';
+                    });
+                });
+            });
+            </script>
 
             {% if messages %}
                 <div class="mt-2">
