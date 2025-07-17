@@ -1,10 +1,10 @@
 from django import forms
-from membres.models import Membre
+from membres.models import Membres
 from decimal import Decimal
 
 class MembreForm(forms.ModelForm):
     class Meta:
-        model = Membre
+        model = Membres
         exclude = ['numero_adherent', 'date_inscription', 'is_actif']
 
     def clean_montant(self):

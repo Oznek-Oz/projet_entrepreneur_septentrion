@@ -12,10 +12,12 @@
                 {% if messages %}
                     <div class="mb-4">
                         {% for message in messages %}
-                            <div class="alert alert-danger alert-{{ message.tags }} d-flex align-items-center alert-dismissible fade show" role="alert">
+                            <div class="alert alert-danger alert-{{ message.tags }} d-flex align-items-center alert-dismissible fade show"
+                                 role="alert">
                                 <i class="bi bi-info-circle-fill me-2"></i>
                                 <span>{{ message }}</span>
-                                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Fermer"></button>
+                                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"
+                                        aria-label="Fermer"></button>
                             </div>
                         {% endfor %}
                     </div>
@@ -136,4 +138,143 @@
             </div>
         </div>
     </div>
+
+
+
+
 {% endblock %}
+
+
+{% comment %}<script>
+        const steps = document.querySelectorAll('.step');
+        const nextBtn = document.getElementById('nextBtn');
+        const prevBtn = document.getElementById('prevBtn');
+        const form = document.getElementById('multiStepForm');
+        const progressBar = document.getElementById('progressBar');
+        let currentStep = 0;
+
+        function updateFormStep() {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === currentStep);
+            });
+
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.textContent = currentStep === steps.length - 1 ? 'Soumettre' : 'Suivant';
+            validateStep();
+            progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+        }
+
+        function validateStep() {
+            const inputs = steps[currentStep].querySelectorAll('input, select');
+            let allFilled = true;
+            inputs.forEach(input => {
+                if (input.hasAttribute('required') && !input.value) {
+                    allFilled = false;
+                }
+            });
+            nextBtn.disabled = !allFilled;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateFormStep();
+            } else {
+                form.submit();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateFormStep();
+            }
+        });
+
+        document.querySelectorAll('input, select').forEach(input => {
+            input.addEventListener('input', validateStep);
+        });
+
+        updateFormStep();
+    </script>
+
+    <script>
+        // Vérification AJAX pour username et email
+        const usernameInput = document.getElementById("username");
+        const emailInput = document.getElementById("email");
+
+        function checkAvailability(field, value) {
+            return fetch(`/check_${field}/?${field}=${value}`)
+                .then(response => response.json());
+        }
+
+        function showValidationResult(input, message, isValid) {
+            const feedback = input.nextElementSibling;
+            if (isValid) {
+                input.classList.remove("is-invalid");
+                input.classList.add("is-valid");
+                feedback.textContent = "";
+            } else {
+                input.classList.remove("is-valid");
+                input.classList.add("is-invalid");
+                feedback.textContent = message;
+            }
+        }
+
+        usernameInput.addEventListener("blur", () => {
+            const value = usernameInput.value;
+            if (value.trim() !== "") {
+                checkAvailability("username", value).then(data => {
+                    showValidationResult(usernameInput, data.message, data.available);
+                });
+            }
+        });
+
+        emailInput.addEventListener("blur", () => {
+            const value = emailInput.value;
+            if (value.trim() !== "") {
+                checkAvailability("email", value).then(data => {
+                    showValidationResult(emailInput, data.message, data.available);
+                });
+            }
+        });
+    </script>
+
+    <!-- Résumé final avant soumission -->
+    <div class="step d-none" data-step="5">
+        <h5 class="mb-3"><i class="bi bi-check2-circle"></i> Vérification des informations</h5>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Nom d'utilisateur :</strong> <span id="summary-username"></span>
+            </li>
+            <li class="list-group-item"><strong>Email :</strong> <span id="summary-email"></span></li>
+            <li class="list-group-item"><strong>Nom :</strong> <span id="summary-nom"></span></li>
+            <li class="list-group-item"><strong>Prénom :</strong> <span id="summary-prenom"></span></li>
+            <li class="list-group-item"><strong>Téléphone :</strong> <span id="summary-telephone"></span></li>
+            <li class="list-group-item"><strong>Facebook :</strong> <span id="summary-facebook"></span></li>
+            <li class="list-group-item"><strong>Date d'adhésion :</strong> <span id="summary-date"></span></li>
+        </ul>
+        <button type="button" class="btn btn-secondary mt-4 prev-step">Précédent</button>
+        <button type="submit" class="btn btn-success mt-4">Soumettre</button>
+    </div>
+
+    <script>
+        // Mise à jour du résumé à l'étape 4 -> 5
+        function updateSummary() {
+            document.getElementById("summary-username").textContent = document.getElementById("username").value;
+            document.getElementById("summary-email").textContent = document.getElementById("email").value;
+            document.getElementById("summary-nom").textContent = document.getElementById("nom").value;
+            document.getElementById("summary-prenom").textContent = document.getElementById("prenom").value;
+            document.getElementById("summary-telephone").textContent = document.getElementById("telephone").value;
+            document.getElementById("summary-facebook").textContent = document.getElementById("facebook").value;
+            document.getElementById("summary-date").textContent = document.getElementById("date_adhesion").value;
+        }
+
+        // Appelé juste avant d'afficher l'étape 5
+        const nextButtons = document.querySelectorAll('.next-step');
+        nextButtons.forEach((btn) => {
+            btn.addEventListener('click', () => {
+                const step = parseInt(btn.closest('[data-step]').dataset.step);
+                if (step === 4) updateSummary();
+            });
+        });
+    </script>{% endcomment %}

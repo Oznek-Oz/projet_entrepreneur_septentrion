@@ -32,7 +32,7 @@ class MembreManager(BaseUserManager):
         return self.create_user(username, email, password, **extra_fields)
 
 
-class Membre(AbstractBaseUser, PermissionsMixin):
+class Membres(AbstractBaseUser, PermissionsMixin):
     """
     Modèle principal représentant un membre de la communauté.
     Hérite de AbstractBaseUser pour la personnalisation complète de l'utilisateur.
@@ -78,7 +78,7 @@ class Membre(AbstractBaseUser, PermissionsMixin):
 
     def save(self, *args, **kwargs):
         if not self.numero_adherent:
-            dernier_id = Membre.objects.count() + 1
+            dernier_id = Membres.objects.count() + 1
             self.numero_adherent = f"ADH{dernier_id:04d}"
         super().save(*args, **kwargs)
 

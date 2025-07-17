@@ -11,12 +11,12 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AddField(
-            model_name="membre",
+            model_name="membres",
             name="confirmation_token",
             field=models.CharField(blank=True, max_length=100, null=True, unique=True),
         ),
         migrations.AddField(
-            model_name="membre",
+            model_name="membres",
             name="is_confirmed",
             field=models.BooleanField(default=False),
         ),

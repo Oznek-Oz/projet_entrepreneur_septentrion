@@ -22,13 +22,20 @@
                         <span id="typed-slogan"></span>
                     </p><br>
                     <p class="lead" data-aos="zoom-in-up" data-aos-delay="800">
-                        <a
-                                href="{% url 'adhesion' %}"
-                                class="btn text-light btn-lg btn-light fw-bold border-white bg-gdd animate__animated animate__pulse animate__delay-2s"
-                        >Devenir membre</a>
+                        {% if user.is_authenticated %}
+                            <span class="text-gdd btn btn-lg btn-light">Bonjour {{ user.username }} !</span>
+                        {% else %}
+                            <a
+                                    href="{% url 'adhesion' %}"
+                                    class="btn text-light btn-lg btn-light fw-bold border-white bg-gdd animate__animated animate__pulse animate__delay-2s"
+                            >Devenir membre
+                            </a>
+                        {% endif %}
+
                     </p>
                     <p class="lead" data-aos="zoom-in-up" data-aos-delay="900">
-                        <a href="{% url 'don' %}" class="btn btn-warning btn-lg fw-bold border-white animate__animated animate__pulse animate__delay-2s">
+                        <a href="{% url 'don' %}"
+                           class="btn btn-warning btn-lg fw-bold border-white animate__animated animate__pulse animate__delay-2s">
                             <i class="fa fa-heart"></i> Faire un don
                         </a>
                     </p>
@@ -104,7 +111,9 @@
                         l’accompagnement et la mise en réseau des entrepreneurs, freelances, jeunes créateurs et
                         porteurs de
                         projets de la région septentrionale.</p><br>
-                    <a href="/a-propos/" class="btn btn-outline-primary mt-md-4 animate__animated animate__fadeInUp animate__delay-1s">En savoir plus</a>
+                    <a href="/a-propos/"
+                       class="btn btn-outline-primary mt-md-4 animate__animated animate__fadeInUp animate__delay-1s">En
+                        savoir plus</a>
                 </div>
                 <div class="col-md-6" data-aos="zoom-in" data-aos-delay="300">
                     <img src="{% static 'images/logo1.jpg' %}" class="img-fluid rounded">
@@ -202,7 +211,9 @@
             </div>
         </div>
 
-        <a href="{% url 'blog' %}" class="btn btn-light text-gdd mt-3 animate__animated animate__fadeInUp animate__delay-3s">Voir toutes les actualités</a>
+        <a href="{% url 'blog' %}"
+           class="btn btn-light text-gdd mt-3 animate__animated animate__fadeInUp animate__delay-3s">Voir toutes les
+            actualités</a>
 
         <hr class="featurette-divider"/>
     </section>
@@ -457,7 +468,8 @@
         <div class="container marketing">
             <!-- Three columns of text below the carousel -->
             <div class="row">
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in" data-aos-delay="200">
+                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
+                     data-aos-delay="200">
                     <div class="cercle d-flex justify-content-center align-items-center">
                         <img src="{% static 'images/logo.jpg' %}" alt="">
                     </div>
@@ -468,11 +480,13 @@
                         text below the carousel. This is the first column.
                     </p>
                     <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-1s" href="#">View details &raquo;</a>
+                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-1s" href="#">View
+                            details &raquo;</a>
                     </p>
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in" data-aos-delay="300">
+                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
+                     data-aos-delay="300">
                     <div class="cercle d-flex justify-content-center align-items-center">
                         <img src="{% static 'images/logo.jpg' %}" alt="">
                     </div>
@@ -483,11 +497,13 @@
                         text below the carousel. This is the first column.
                     </p>
                     <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-2s" href="#">View details &raquo;</a>
+                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-2s" href="#">View
+                            details &raquo;</a>
                     </p>
                 </div>
                 <!-- /.col-lg-4 -->
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in" data-aos-delay="400">
+                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
+                     data-aos-delay="400">
                     <div class="cercle d-flex justify-content-center align-items-center">
                         <img src="{% static 'images/logo.jpg' %}" alt="">
                     </div>
@@ -498,7 +514,8 @@
                         text below the carousel. This is the first column.
                     </p>
                     <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-3s" href="#">View details &raquo;</a>
+                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-3s" href="#">View
+                            details &raquo;</a>
                     </p>
                 </div>
             </div>
@@ -511,99 +528,108 @@
     <section class="py-5 bg-gdd text-center text-white d-flex align-items-center adhesion"
              style="height: 90vh; transition: all 0.5s" data-aos="fade-in" data-aos-delay="200">
         <div class="container">
-            <h2 class="mb-4">Vous êtes entrepreneur <span class="text-black">?</span> Rejoignez <span class="wc">Woila Community</span></h2>
+            <h2 class="mb-4">Vous êtes entrepreneur <span class="text-black">?</span> Rejoignez <span class="wc">Woila Community</span>
+            </h2>
             <br>
-            <a href="{% url 'adhesion' %}" class="btn btn-light mt-4 text-gdd animate__animated animate__pulse animate__delay-2s">Adhérer maintenant</a>
+            <a href="{% url 'adhesion' %}"
+               class="btn btn-light mt-4 text-gdd animate__animated animate__pulse animate__delay-2s">Adhérer
+                maintenant</a>
         </div>
     </section>
 
     <!-- Ajout Typed.js pour effet texte dynamique sur le slogan uniquement -->
     <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        // Animation du slogan avec fade
-        new Typed("#typed-slogan", {
-          strings: [
-            "Une communauté qui connecte les jeunes entrepreneurs du Septentrion.",
-            "Rejoignez-nous et développez votre réseau !",
-            "Des opportunités, des projets, de l'entraide."
-          ],
-          typeSpeed: 40,
-          backSpeed: 20,
-          backDelay: 2000,
-          loop: true,
-          showCursor: false,
-          fadeOut: true,
-          fadeOutClass: 'typed-fade-out',
-          fadeOutDelay: 500
+        document.addEventListener("DOMContentLoaded", function () {
+            // Animation du slogan avec fade
+            new Typed("#typed-slogan", {
+                strings: [
+                    "Une communauté qui connecte les jeunes entrepreneurs du Septentrion.",
+                    "Rejoignez-nous et développez votre réseau !",
+                    "Des opportunités, des projets, de l'entraide."
+                ],
+                typeSpeed: 40,
+                backSpeed: 20,
+                backDelay: 2000,
+                loop: true,
+                showCursor: false,
+                fadeOut: true,
+                fadeOutClass: 'typed-fade-out',
+                fadeOutDelay: 500
+            });
         });
-      });
     </script>
 
     <!-- Animation stats : chiffres et barres progressives au scroll, une seule fois -->
     <script>
-      (function() {
-        let statsAnimated = false;
-        function animateStats() {
-          if (statsAnimated) return;
-          statsAnimated = true;
-          document.querySelectorAll('.stat-col').forEach(function(col) {
-            // Chiffre
-            const number = col.querySelector('.stat-number');
-            const target = parseInt(number.getAttribute('data-target'));
-            const isPlus = col.getAttribute('data-count').includes('+');
-            let count = 0;
-            const duration = 1200;
-            const step = Math.ceil(target / (duration / 20));
-            function updateNumber() {
-              count += step;
-              if (count >= target) {
-                number.textContent = isPlus ? target + '+' : target;
-              } else {
-                number.textContent = count;
-                setTimeout(updateNumber, 20);
-              }
+        (function () {
+            let statsAnimated = false;
+
+            function animateStats() {
+                if (statsAnimated) return;
+                statsAnimated = true;
+                document.querySelectorAll('.stat-col').forEach(function (col) {
+                    // Chiffre
+                    const number = col.querySelector('.stat-number');
+                    const target = parseInt(number.getAttribute('data-target'));
+                    const isPlus = col.getAttribute('data-count').includes('+');
+                    let count = 0;
+                    const duration = 1200;
+                    const step = Math.ceil(target / (duration / 20));
+
+                    function updateNumber() {
+                        count += step;
+                        if (count >= target) {
+                            number.textContent = isPlus ? target + '+' : target;
+                        } else {
+                            number.textContent = count;
+                            setTimeout(updateNumber, 20);
+                        }
+                    }
+
+                    updateNumber();
+                    // Barre
+                    const bar = col.querySelector('.stat-bar');
+                    const barTarget = parseInt(col.getAttribute('data-bar'));
+                    let width = 0;
+                    const barStep = Math.ceil(barTarget / (duration / 20));
+
+                    function updateBar() {
+                        width += barStep;
+                        if (width >= barTarget) {
+                            bar.style.width = barTarget + '%';
+                        } else {
+                            bar.style.width = width + '%';
+                            setTimeout(updateBar, 20);
+                        }
+                    }
+
+                    updateBar();
+                });
             }
-            updateNumber();
-            // Barre
-            const bar = col.querySelector('.stat-bar');
-            const barTarget = parseInt(col.getAttribute('data-bar'));
-            let width = 0;
-            const barStep = Math.ceil(barTarget / (duration / 20));
-            function updateBar() {
-              width += barStep;
-              if (width >= barTarget) {
-                bar.style.width = barTarget + '%';
-              } else {
-                bar.style.width = width + '%';
-                setTimeout(updateBar, 20);
-              }
-            }
-            updateBar();
-          });
-        }
-        // Intersection Observer pour déclencher l'animation quand la section est visible
-        document.addEventListener('DOMContentLoaded', function() {
-          const section = document.getElementById('stats-section');
-          if ('IntersectionObserver' in window) {
-            const observer = new IntersectionObserver(function(entries) {
-              if (entries[0].isIntersecting) {
-                animateStats();
-                observer.disconnect();
-              }
-            }, { threshold: 0.3 });
-            observer.observe(section);
-          } else {
-            // fallback si pas supporté
-            window.addEventListener('scroll', function onScroll() {
-              const rect = section.getBoundingClientRect();
-              if (rect.top < window.innerHeight && rect.bottom > 0) {
-                animateStats();
-                window.removeEventListener('scroll', onScroll);
-              }
+
+            // Intersection Observer pour déclencher l'animation quand la section est visible
+            document.addEventListener('DOMContentLoaded', function () {
+                const section = document.getElementById('stats-section');
+                if ('IntersectionObserver' in window) {
+                    const observer = new IntersectionObserver(function (entries) {
+                        if (entries[0].isIntersecting) {
+                            animateStats();
+                            observer.disconnect();
+                        }
+                    }, {threshold: 0.3});
+                    observer.observe(section);
+                } else {
+                    // fallback si pas supporté
+                    window.addEventListener('scroll', function onScroll() {
+                        const rect = section.getBoundingClientRect();
+                        if (rect.top < window.innerHeight && rect.bottom > 0) {
+                            animateStats();
+                            window.removeEventListener('scroll', onScroll);
+                        }
+                    });
+                }
             });
-          }
-        });
-      })();
+        })();
     </script>
 {% endblock %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+{% block content %}
+    <style>
+        .modal-backdrop.show {
+            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-backdrop {
+            transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+        }
+
+        .card {
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: scale(1.03);
+        }
+
+    </style>
+
+    <div id="myCarousel" class="carousel slide mb-6" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+            {% for image in carousel_images %}
+                <button
+                        type="button"
+                        data-bs-target="#myCarousel"
+                        data-bs-slide-to="{{ forloop.counter0 }}"
+                        {% if forloop.first %}class="active" aria-current="true"{% endif %}
+                        aria-label="Slide {{ forloop.counter }}"
+                ></button>
+            {% endfor %}
+        </div>
+
+        <h2 class="text-center mt-4">Carousel Test</h2>
+        <p class="text-center">Images sélectionnées : {{ carousel_images|length }}</p>
+
+        {% if carousel_images %}
+            <div id="carouselExample" class="carousel slide mx-auto my-4" data-bs-ride="carousel"
+                 style="max-width: 700px;">
+                <div class="carousel-inner">
+                    {% for img in carousel_images %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img src="{{ img.image.url }}" class="d-block w-100" alt="{{ img.titre }}"
+                                 style="height: 400px; object-fit: cover;">
+                            <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+                                <h5>{{ img.titre }}</h5>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExample"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+            </div>
+        {% else %}
+            <p class="text-center text-danger">Aucune image sélectionnée pour le carousel.</p>
+        {% endif %}
+
+        <div class="carousel-inner">
+            {% for image in carousel_images %}
+                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                    <img src="{{ image.image.url }}" alt="{{ image.titre }}" class="d-block w-100" height="400"
+                         style="object-fit: cover;">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5>{{ image.titre }}</h5>
+                        <p>{{ image.description|default:"" }}</p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Précédent</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#myCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Suivant</span>
+        </button>
+    </div>
+
+    <div class="album py-5 bg-body-tertiary ">
+
+        <div class="container py-5">
+            <h2 class="mb-4 text-center">
+                Galerie –
+                {% if filtre == 'profil' %}
+                    Photos de profil
+                {% elif filtre == 'userpost' %}
+                    Posts utilisateurs
+                {% elif filtre == 'blog' %}
+                    Images du blog
+                {% elif filtre == 'galerie' %}
+                    Galerie libre
+                {% else %}
+                    Filtre : {{ filtre }}
+                {% endif %}
+            </h2>
+            <div class="d-flex justify-content-center mb-4">
+                <div class="btn-group">
+                    <a href="{% url 'galerie' %}" class="btn btn-outline-primary {% if not filtre %}active{% endif %}">Tout</a>
+                    <a href="{% url 'galerie_filtrée' 'userpost' %}"
+                       class="btn btn-outline-primary {% if filtre == 'userpost' %}active{% endif %}">Posts
+                        utilisateurs</a>
+                    <a href="{% url 'galerie_filtrée' 'blog' %}"
+                       class="btn btn-outline-primary {% if filtre == 'blog' %}active{% endif %}">Blog</a>
+                    <a href="{% url 'galerie_filtrée' 'galerie' %}"
+                       class="btn btn-outline-primary {% if filtre == 'galerie' %}active{% endif %}">Galerie libre</a>
+                </div>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+                {% for img in images %}
+                    <div class="col" id="main-content">
+                        <div class="card shadow-sm h-100 overflow-hidden rounded-4">
+                            <img src="{{ img.image.url }}" alt="{{ img.titre }}"
+                                 class="bd-placeholder-img card-img-top"
+                                 style="height:225px; object-fit: cover;">
+
+                            <div class="card-body bg-primary text-white d-flex flex-column justify-content-between">
+                                <p class="card-text">{{ img.titre }}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-light"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#modal-{{ img.id }}">
+                                            View
+                                        </button>
+                                    </div>
+                                    <small>{{ img.date_ajout|date:"d M Y" }}</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    <div class="modal fade  bg-transparent" id="modal-{{ img.id }}" tabindex="-1"
+                         aria-labelledby="modalLabel{{ img.id }}"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-body row">
+                                    <div class="col-md-6">
+                                        <img src="{{ img.image.url }}" class="img-fluid w-100" alt="{{ img.titre }}">
+                                    </div>
+                                    <div class="col-md-6 d-flex flex-column">
+                                        <h5 class="mb-3">{{ img.titre }}</h5>
+                                        <p>{{ img.description }}</p>
+                                        <small class="text-muted mt-auto">Ajoutée
+                                            le {{ img.date_ajout|date:"d M Y" }}</small>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+        </div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const mainContent = document.getElementById('main-content');
+
+                // On écoute les événements Bootstrap Modal
+                document.querySelectorAll('.modal').forEach(modalEl => {
+                    modalEl.addEventListener('show.bs.modal', () => {
+                        mainContent.classList.add('blur-background');
+                    });
+                    modalEl.addEventListener('hidden.bs.modal', () => {
+                        mainContent.classList.remove('blur-background');
+                    });
+                });
+            });
+        </script>
+
+
+    </div>
+
+{% endblock %}

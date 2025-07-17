@@ -12,7 +12,7 @@ class Adhesion (models.Model):
     ]
     
     numero_adherent = models.CharField(max_length=20)
-    membre = models.ForeignKey(Membres, on_delete = models.CASCADE)
+    membres = models.ForeignKey(Membres, on_delete = models.CASCADE)
     type_adhesion = models.CharField(max_length=20, choices=TYPE_CHOICES)
     montant = models.DecimalField(max_digits=10, decimal_places=5)
     moyen_paiment = models.CharField(max_length=50)

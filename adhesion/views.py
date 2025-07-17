@@ -3,16 +3,17 @@ Vues pour la gestion de l'adhésion des membres.
 - Inscription d'un membre avec envoi d'un email de confirmation personnalisé.
 - Validation de l'adhésion via un lien unique reçu par email.
 """
-
+from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.hashers import make_password
-from membres.models import Membre  # <-- importer le modèle
+from membres.models import Membres  # <-- importer le modèle
 from django.core.mail import send_mail
 from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse
 import uuid
+
 
 def adhesion(request):
     """
@@ -24,7 +25,7 @@ def adhesion(request):
     """
     # Si 
     if request.user.is_authenticated:
-        return redirect('adhesion')
+        return redirect('dashboard')
 
     # Si l'utilisateur est déjà connecté, on le redirige vers la page d'adhésion
     if request.method == 'POST':
@@ -36,11 +37,11 @@ def adhesion(request):
             return redirect('adhesion')
 
         email = request.POST.get('email')
-        if Membre.objects.filter(email=email).exists():
+        if Membres.objects.filter(email=email).exists():
             messages.error(request, "Un compte existe déjà avec cet email.")
             return redirect('adhesion')
 
-        membre = Membre(
+        membres = Membres(
             username=request.POST.get('username'),
             nom=request.POST.get('nom'),
             prenom=request.POST.get('prenom'),
@@ -59,25 +60,25 @@ def adhesion(request):
             moyen_paiement=request.POST.get('moyen_paiement'),
             numero_transaction=request.POST.get('numero_transaction'),
             photo=request.FILES.get('photo'),
-            confirmation_token=str(uuid.uuid4()) # Ajout du token
+            confirmation_token=str(uuid.uuid4())  # Ajout du token
         )
-        membre.save()
+        membres.save()
         # Envoi de l'email de confirmation
-        confirmation_url = request.build_absolute_uri(
-            reverse('confirmer', args=[membre.confirmation_token])
-        )
+        confirmation_url = request.build_absolute_uri(reverse('confirmer', args=[membres.confirmation_token]))
         sujet = "Confirmation de votre adhésion à la communauté"
-        message = f"Bonjour {membre.prenom or membre.nom},\n\nMerci pour votre demande d'adhésion. Veuillez confirmer votre inscription en cliquant sur le lien suivant :\n{confirmation_url}\n\nBienvenue parmi nous !"
+        message = f"Bonjour {membres.prenom or membres.nom},\n\nMerci pour votre demande d'adhésion. Veuillez confirmer votre inscription en cliquant sur le lien suivant :\n{confirmation_url}\n\nBienvenue parmi nous !"
         send_mail(
             sujet,
             message,
             settings.DEFAULT_FROM_EMAIL,
-            [membre.email],
+            [membres.email],
             fail_silently=False,
         )
         messages.success(request, "Inscription réussie. Un email de confirmation vous a été envoyé.")
+        login(request, membres)
         return redirect('dashboard')
     return render(request, 'adhesion/adhesion.html')
+
 
 def confirmer_adhesion(request, token):
     """
@@ -86,9 +87,9 @@ def confirmer_adhesion(request, token):
     - Affiche un message de succès ou d'erreur.
     """
     try:
-        membre = Membre.objects.get(confirmation_token=token)
-        membre.is_confirmed = True
-        membre.save()
+        membres = Membres.objects.get(confirmation_token=token)
+        membres.is_confirmed = True
+        membres.save()
         return HttpResponse("Votre adhésion est confirmée. Merci et bienvenue !")
-    except Membre.DoesNotExist:
+    except Membres.DoesNotExist:
         return HttpResponse("Lien invalide ou déjà utilisé.")

@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 LOGIN_REDIRECT_URL = "accueil:home"
 LOGOUT_REDIRECT_URL = "accueil:home"
 
-AUTH_USER_MODEL = 'membres.Membre'
+AUTH_USER_MODEL = 'membres.Membres'
 
 # Application definition
 
@@ -132,6 +132,10 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'   # dossier physique où seront stockées les images uploadées
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

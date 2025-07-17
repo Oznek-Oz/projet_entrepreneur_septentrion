@@ -42,7 +42,7 @@ class Migration(migrations.Migration):
                 ("moyen_paiment", models.CharField(max_length=50)),
                 ("numero_transaction", models.CharField(max_length=100)),
                 (
-                    "membre",
+                    "membres",
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to="membres.membres",

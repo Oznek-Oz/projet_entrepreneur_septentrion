@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from membres.models import Membre, Discussion, Message
+from membres.models import Membres, Discussion, Message
 
 
 # Register your models here.
@@ -15,8 +15,8 @@ class DiscussionAdmin(admin.ModelAdmin):
 @admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
     list_display = ('discussion', 'auteur', 'contenu', 'auteur_repondu', 'date_envoi')
-    list_display_links = ('auteur', 'contenu', 'auteur_repondu')
-    search_fields = ('auteur__username', 'contenu', 'reponse_a__auteur__username')
+    list_display_links = ('discussion' , 'auteur' , 'auteur_repondu')
+    search_fields = ('auteur__username' , 'discussion', 'reponse_a__auteur__username')
     list_filter = ('auteur', 'discussion')
 
     def auteur_repondu(self, obj):

@@ -117,7 +117,7 @@ def forum_delete(request, pk):
     discussion = get_object_or_404(Discussion, pk=pk)
     if request.user == discussion.auteur or request.user.is_superuser:
         discussion.delete()
-        return redirect('forum_list')
+        return redirect('forum')
     messages.error(request, "Vous n'avez pas le droit de supprimer cette discussion.")
     return redirect('forum_detail', pk=discussion.pk)
 
