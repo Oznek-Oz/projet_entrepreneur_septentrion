@@ -13,6 +13,8 @@ from django.urls import reverse
 from django.conf import settings
 from django.http import HttpResponse
 import uuid
+from django.views.decorators.http import require_GET
+from django.http import JsonResponse
 
 
 def adhesion(request):
@@ -29,16 +31,57 @@ def adhesion(request):
 
     # Si l'utilisateur est déjà connecté, on le redirige vers la page d'adhésion
     if request.method == 'POST':
-        password = request.POST.get('password')
-        confirm = request.POST.get('confirm_password')
-
+        # Validation côté serveur
+        username = request.POST.get('username', '').strip()
+        email = request.POST.get('email', '').strip()
+        password = request.POST.get('password', '')
+        confirm = request.POST.get('confirm_password', '')
+        nom = request.POST.get('nom', '').strip()
+        prenom = request.POST.get('prenom', '').strip()
+        
+        # Validation des champs obligatoires
+        if not username or len(username) < 3:
+            messages.error(request, "Le nom d'utilisateur doit contenir au moins 3 caractères.")
+            return redirect('adhesion')
+            
+        if not email:
+            messages.error(request, "L'email est obligatoire.")
+            return redirect('adhesion')
+            
+        # Validation du format email
+        import re
+        email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+        if not re.match(email_regex, email):
+            messages.error(request, "Format d'email invalide.")
+            return redirect('adhesion')
+            
+        if not password:
+            messages.error(request, "Le mot de passe est obligatoire.")
+            return redirect('adhesion')
+            
+        if len(password) < 6:
+            messages.error(request, "Le mot de passe doit contenir au moins 6 caractères.")
+            return redirect('adhesion')
+            
         if password != confirm:
             messages.error(request, "Les mots de passe ne correspondent pas.")
             return redirect('adhesion')
+            
+        if not nom:
+            messages.error(request, "Le nom est obligatoire.")
+            return redirect('adhesion')
+            
+        if not prenom:
+            messages.error(request, "Le prénom est obligatoire.")
+            return redirect('adhesion')
 
-        email = request.POST.get('email')
+        # Vérification de l'unicité de l'email et du nom d'utilisateur
         if Membres.objects.filter(email=email).exists():
             messages.error(request, "Un compte existe déjà avec cet email.")
+            return redirect('adhesion')
+            
+        if Membres.objects.filter(username=username).exists():
+            messages.error(request, "Ce nom d'utilisateur est déjà pris.")
             return redirect('adhesion')
 
         membres = Membres(
@@ -93,3 +136,10 @@ def confirmer_adhesion(request, token):
         return HttpResponse("Votre adhésion est confirmée. Merci et bienvenue !")
     except Membres.DoesNotExist:
         return HttpResponse("Lien invalide ou déjà utilisé.")
+
+
+@require_GET
+def check_username(request):
+    username = request.GET.get('username', '').strip()
+    exists = Membres.objects.filter(username=username).exists()
+    return JsonResponse({'available': not exists})

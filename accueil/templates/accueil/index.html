@@ -2,10 +2,184 @@
 
 {% load static %}
 
-{% block title %}Accueil{% endblock %}
 
 {% block content %}
+    <style>
+        body {
+            /* overflow: hidden;  Retiré pour permettre le scroll */
+            cursor: none; /* Le curseur natif est masqué */
+        }
 
+        #cursor-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 48px;
+            height: 48px;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 1;
+            transition: opacity 0.3s, transform 0.05s linear;
+        }
+
+        #cursor-glow .halo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 58px;
+            height: 58px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 255, 213, 0.35) 0%, rgba(0, 225, 255, 0.15) 60%, transparent 100%);
+            filter: blur(2px);
+            transition: opacity 0.6s;
+            opacity: 1;
+        }
+
+        #cursor-glow .dot {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 8px;
+            height: 8px;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 0 8px 2px rgba(0, 170, 255, 0.5);
+        }
+
+        /* Halo et point noirs sur bouton */
+        #cursor-glow.cursor-black .halo {
+            background: radial-gradient(circle, rgba(0, 0, 0, 0.35) 0%, rgba(0, 0, 0, 0.15) 60%, transparent 100%);
+        }
+
+        #cursor-glow.cursor-black .dot {
+            background: #111;
+            box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Animation pulse pour le halo lors d'un clic */
+        #cursor-glow.pulse .halo {
+            animation: halo-pulse 0.4s;
+        }
+
+        @keyframes halo-pulse {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(1.4);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            let glow = document.getElementById('cursor-glow');
+            if (!glow) {
+                glow = document.createElement('div');
+                glow.id = 'cursor-glow';
+                document.body.appendChild(glow);
+            }
+            glow.innerHTML = '<div class="halo"></div><div class="dot"></div>';
+            const halo = glow.querySelector('.halo');
+
+            let hideTimeout;
+            let lastMove = Date.now();
+            let fadeDelay = 700; // ms avant estompage
+            let isOnButton = false;
+
+            function showHalo() {
+                halo.style.opacity = 1;
+            }
+
+            function hideHalo() {
+                halo.style.opacity = 0.2;
+            }
+
+            // Génère un beep court
+            function playBeep() {
+                try {
+                    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                    const o = ctx.createOscillator();
+                    const g = ctx.createGain();
+                    o.type = 'sine';
+                    o.frequency.value = 880;
+                    g.gain.value = 0.08;
+                    o.connect(g);
+                    g.connect(ctx.destination);
+                    o.start();
+                    setTimeout(() => {
+                        o.stop();
+                        ctx.close();
+                    }, 80);
+                } catch (e) {
+                }
+            }
+
+            document.addEventListener('mousemove', (e) => {
+                const x = e.clientX - glow.offsetWidth / 2;
+                const y = e.clientY - glow.offsetHeight / 2;
+                glow.style.transform = `translate(${x}px, ${y}px)`;
+                glow.style.opacity = 1;
+                showHalo();
+                lastMove = Date.now();
+                clearTimeout(hideTimeout);
+                hideTimeout = setTimeout(() => {
+                    if (Date.now() - lastMove >= fadeDelay) {
+                        hideHalo();
+                    }
+                }, fadeDelay);
+            });
+
+            document.addEventListener('mouseleave', () => {
+                glow.style.opacity = 0;
+            });
+            document.addEventListener('mouseenter', () => {
+                glow.style.opacity = 1;
+            });
+
+            // Survol lien : halo noir + beep
+            document.addEventListener('mouseover', function (e) {
+                let link = e.target.closest('a');
+                if (link && !isOnButton) {
+                    isOnButton = true;
+                    glow.classList.add('cursor-black');
+                    playBeep();
+                }
+            });
+            document.addEventListener('mouseout', function (e) {
+                let link = e.target.closest('a');
+                if (link && isOnButton) {
+                    isOnButton = false;
+                    glow.classList.remove('cursor-black');
+                }
+            });
+
+            // Animation pulse sur clic bouton
+            document.addEventListener('click', function (e) {
+                let target = e.target;
+                if (target.closest('a')) {
+                    glow.classList.remove('pulse');
+                    void glow.offsetWidth;
+                    glow.classList.add('pulse');
+                    setTimeout(() => {
+                        glow.classList.remove('pulse');
+                    }, 400);
+                }
+            });
+        });
+    </script>
+
+    <div id="cursor-glow">
+        <div class="halo"></div>
+        <div class="dot"></div>
+    </div>
     <!--# Carousel-->
     <div class="d-flex w-100 vh-100 p-0 mx-0 flex-column text-center " data-aos="fade-in">
         <div
@@ -18,27 +192,32 @@
                     <h1 data-aos="fade-right" data-aos-delay="400">
                         Bienvenue sur <span class="text-gdd fw-bolder">Woila community</span>.
                     </h1>
-                    <p class="lead" data-aos="fade-left" data-aos-delay="600">
+                    <p class="lead" data-aos="fade-left" data-aos-delay="600" style="min-height: 35px">
                         <span id="typed-slogan"></span>
-                    </p><br>
-                    <p class="lead" data-aos="zoom-in-up" data-aos-delay="800">
+                    </p><br><br>
+                    <div class="lead d-md-flex justify-content-center" style="max-height: min-content !important;"
+                         data-aos="zoom-in-up" data-aos-delay="800">
+
                         {% if user.is_authenticated %}
-                            <span class="text-gdd btn btn-lg btn-light">Bonjour {{ user.username }} !</span>
+                            <button class="text-gdd btn  btn-lg btn-light" style="max-height: min-content !important;"
+                                    disabled>Bonjour {{ user.username }} !
+                            </button>
                         {% else %}
                             <a
                                     href="{% url 'adhesion' %}"
-                                    class="btn text-light btn-lg btn-light fw-bold border-white bg-gdd animate__animated animate__pulse animate__delay-2s"
+                                    class="btn text-light btn-lg bg-primary fw-bold animate__animated"
+                                    style="max-height: min-content !important;"
                             >Devenir membre
                             </a>
                         {% endif %}
+                        <p class="lead mt-3 mt-sm-0" data-aos="zoom-in-up" data-aos-delay="898">
+                            <a href="{% url 'don:don' %}"
+                               class="btn btn-warning btn-lg fw-bold border-black animate__animated animate__pulse animate__delay-4s">
+                                <i class="fa fa-heart"></i> Faire un don
+                            </a>
+                        </p>
 
-                    </p>
-                    <p class="lead" data-aos="zoom-in-up" data-aos-delay="900">
-                        <a href="{% url 'don' %}"
-                           class="btn btn-warning btn-lg fw-bold border-white animate__animated animate__pulse animate__delay-2s">
-                            <i class="fa fa-heart"></i> Faire un don
-                        </a>
-                    </p>
+                    </div>
                 </div>
             </div>
 
@@ -120,100 +299,6 @@
                 </div>
             </div>
         </div>
-
-        <hr class="featurette-divider"/>
-    </section>
-
-    <!--Dernières actualités-->
-    <section class="container pt-4 pb-0 text-center" data-aos="fade-up">
-        <div class="d-flex flex-lg-wrap align-items-center pb-3 m-5 mt-0 e-0 ms-4 gap-2">
-            <div class="barre-verticale"></div>
-            <h2 class="h2 display-5 fw-bold" data-aos="fade-right" data-aos-delay="100">Dernière actualités</h2>
-        </div>
-        <div class="row mb-2">
-            <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative animate__animated animate__fadeInUp animate__delay-1s">
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-2 text-primary-emphasis">Formation</strong>
-                        <h3 class="mb-0">Foormation à Garoua</h3>
-                        <div class="mb-1 text-body-secondary">25 Juin</div>
-                        <p class="card-text mb-auto">
-                            Retour sur l'atelier du 25 juin...
-                        </p>
-                        <a
-                                href="{% url 'blog' %}"
-                                class="icon-link gap-1 icon-link-hover stretched-link"
-                        >
-                            Continuer la lecture &raquo;
-                            <svg class="bi" aria-hidden="true">
-                                <use xlink:href="#chevron-right"></use>
-                            </svg>
-                        </a>
-                    </div>
-                    <div class="col-auto d-none d-lg-block">
-                        <svg
-                                aria-label="Placeholder: Thumbnail"
-                                class="bd-placeholder-img"
-                                height="250"
-                                preserveAspectRatio="xMidYMid slice"
-                                role="img"
-                                width="200"
-                                xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <title>Placeholder</title>
-                            <image href="{% static 'images/logo.jpg' %}" width="200" height="250"
-                                   preserveAspectRatio="xMidYMid slice"/>
-                            <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
-                <div
-                        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative animate__animated animate__fadeInUp animate__delay-2s"
-                >
-                    <div class="col p-4 d-flex flex-column position-static">
-                        <strong class="d-inline-block mb-2 text-success-emphasis"
-                        >Pitch</strong
-                        >
-                        <h3 class="mb-0">1min pour présenter un projet</h3>
-                        <div class="mb-1 text-body-secondary">11 Nov</div>
-                        <p class="mb-auto">
-                            Seesion de pitching pour les porteurs de projets...
-                        </p>
-                        <a
-                                href="#"
-                                class="icon-link gap-1 icon-link-hover stretched-link"
-                        >
-                            Continuer la lecture &raquo;
-                            <svg class="bi" aria-hidden="true">
-                                <use xlink:href="#chevron-right"></use>
-                            </svg>
-                        </a>
-                    </div>
-                    <div class="col-auto d-none d-lg-block">
-                        <svg
-                                aria-label="Placeholder: Thumbnail"
-                                class="bd-placeholder-img"
-                                height="250"
-                                preserveAspectRatio="xMidYMid slice"
-                                role="img"
-                                width="200"
-                                xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <title>Placeholder</title>
-                            <image href="{% static 'images/logo1.jpg' %}" width="200" height="250"
-                                   preserveAspectRatio="xMidYMid slice"/>
-                            <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <a href="{% url 'blog' %}"
-           class="btn btn-light text-gdd mt-3 animate__animated animate__fadeInUp animate__delay-3s">Voir toutes les
-            actualités</a>
 
         <hr class="featurette-divider"/>
     </section>
@@ -512,6 +597,101 @@
                 <div class="alert alert-info text-center mt-4">Aucun promoteur enregistré pour le moment.</div>
             {% endif %}
         </div>
+    </section>
+
+    <!--Dernières actualités-->
+    <section class="container pt-4 pb-0 text-center" data-aos="fade-up">
+        <div class="d-flex flex-lg-wrap align-items-center pb-3 m-5 mt-0 e-0 ms-4 gap-2">
+            <div class="barre-verticale"></div>
+            <h2 class="h2 display-5 fw-bold" data-aos="fade-right" data-aos-delay="100">Dernières actualités</h2>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+                <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative animate__animated animate__fadeInUp animate__delay-1s">
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-primary-emphasis">Formation</strong>
+                        <h3 class="mb-0">Foormation à Garoua</h3>
+                        <div class="mb-1 text-body-secondary">25 Juin</div>
+                        <p class="card-text mb-auto">
+                            Retour sur l'atelier du 25 juin...
+                        </p>
+                        <a
+                                href="{% url 'blog' %}"
+                                class="icon-link gap-1 icon-link-hover stretched-link"
+                        >
+                            Continuer la lecture &raquo;
+                            <svg class="bi" aria-hidden="true">
+                                <use xlink:href="#chevron-right"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <svg
+                                aria-label="Placeholder: Thumbnail"
+                                class="bd-placeholder-img"
+                                height="250"
+                                preserveAspectRatio="xMidYMid slice"
+                                role="img"
+                                width="200"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <title>Placeholder</title>
+                            <image href="{% static 'images/logo.jpg' %}" width="200" height="250"
+                                   preserveAspectRatio="xMidYMid slice"/>
+                            <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6" data-aos="fade-up" data-aos-delay="300">
+                <div
+                        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative animate__animated animate__fadeInUp animate__delay-2s"
+                >
+                    <div class="col p-4 d-flex flex-column position-static">
+                        <strong class="d-inline-block mb-2 text-success-emphasis"
+                        >Pitch</strong
+                        >
+                        <h3 class="mb-0">1min pour présenter un projet</h3>
+                        <div class="mb-1 text-body-secondary">11 Nov</div>
+                        <p class="mb-auto">
+                            Seesion de pitching pour les porteurs de projets...
+                        </p>
+                        <a
+                                href="#"
+                                class="icon-link gap-1 icon-link-hover stretched-link"
+                        >
+                            Continuer la lecture &raquo;
+                            <svg class="bi" aria-hidden="true">
+                                <use xlink:href="#chevron-right"></use>
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="col-auto d-none d-lg-block">
+                        <svg
+                                aria-label="Placeholder: Thumbnail"
+                                class="bd-placeholder-img"
+                                height="250"
+                                preserveAspectRatio="xMidYMid slice"
+                                role="img"
+                                width="200"
+                                xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <title>Placeholder</title>
+                            <image href="{% static 'images/logo1.jpg' %}" width="200" height="250"
+                                   preserveAspectRatio="xMidYMid slice"/>
+                            <text x="50%" y="50%" fill="#eceeef" dy=".3em"></text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <a href="{% url 'blog' %}"
+           class="btn btn-outline-primary text-gdd mt-3 animate__animated animate__fadeInUp animate__delay-3s">Voir
+            toutes les
+            actualités</a>
+
+        <hr class="featurette-divider"/>
     </section>
 
     <!--Adhésion-->

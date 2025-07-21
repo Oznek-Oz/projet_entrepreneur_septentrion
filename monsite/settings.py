@@ -26,16 +26,16 @@ SECRET_KEY = "django-insecure-_7m5q@ra%fmsp#b974+bk6a_n1x^1=z1_f^55czn6(me1a61f*
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = ['192.168.1.124', 'localhost']
 
-LOGIN_REDIRECT_URL = "accueil:home"
+#LOGIN_REDIRECT_URL = "accueil:home"
+LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "accueil:home"
 
 AUTH_USER_MODEL = 'membres.Membres'
 
 # Application definition
 
-TAILWIND_APP_NAME = 'theme'
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "galerie",
     "contact",
     "newsletter",
+    "don",
 ]
 
 MIDDLEWARE = [
@@ -128,6 +129,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = "static/"
+ALLOWED_HOSTS = ['192.168.1.124', '192.168.1.126','127.0.0.1', 'localhost']
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
@@ -147,8 +149,18 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # ou le serveur SMTP de votre fournisseur
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'woilacommunity@gmail.com'  # à remplacer par votre adresse
-EMAIL_HOST_PASSWORD = 'opwswwgqkeaeqbye'  # à remplacer par votre mot de passe
+EMAIL_HOST_USER = 'woilacommunity@gmail.com'  # Mon adresse
+EMAIL_HOST_PASSWORD = 'opwswwgqkeaeqbye'  # Mon mot de passe
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+
+# Configuration CinetPay
+CINETPAY_API_KEY = "882005919687903e7083668.04113749"
+CINETPAY_SITE_ID = "105902582"
+BASE_URL = "http://localhost:8000"  # Pour le développement local
+# BASE_URL = "https://votre-domaine.com"  # Pour la production
+CINETPAY_NOTIFY_URL = f"{BASE_URL}/don/cinetpay/notify/"
+CINETPAY_RETURN_URL = f"{BASE_URL}/don/cinetpay/return/"
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'   # dossier physique où seront stockées les images uploadées
+

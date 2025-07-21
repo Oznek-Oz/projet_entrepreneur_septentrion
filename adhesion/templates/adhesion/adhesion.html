@@ -2,279 +2,1189 @@
 {% load static %}
 
 {% block content %}
-    <div class="container my-5">
-        <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white text-center">
-                <h3>Formulaire d’Adhésion</h3>
+<div class="chat-container">
+    <div class="chat-header">
+        <div class="chat-avatar">
+            <i class="bi bi-person-circle"></i>
             </div>
-            <div class="card-body">
-
-                {% if messages %}
-                    <div class="mb-4">
-                        {% for message in messages %}
-                            <div class="alert alert-danger alert-{{ message.tags }} d-flex align-items-center alert-dismissible fade show"
-                                 role="alert">
-                                <i class="bi bi-info-circle-fill me-2"></i>
-                                <span>{{ message }}</span>
-                                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"
-                                        aria-label="Fermer"></button>
-                            </div>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <!-- Informations du compte -->
-                    <h5 class="text-primary">Créer un compte</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Nom utilisateur</label>
-                            <input type="text" class="form-control" name="username" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Adresse email</label>
-                            <input type="email" class="form-control" name="email" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" name="password" required>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Confirmer le mot de passe</label>
-                            <input type="password" class="form-control" name="confirm_password" required>
-                        </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Photo</label>
-                            <input type="file" class="form-control" name="photo" accept="image/*">
+        <div class="chat-info">
+            <h5>Adhésion <span class="text-primary">Woila</span> Community</h5>
+            <small>Assistant virtuel</small>
                         </div>
                     </div>
 
-                    <!-- Informations personnelles -->
-                    <h5 class="text-primary">Informations personnelles</h5>
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Nom</label>
-                            <input type="text" class="form-control" name="nom" required>
+    <div class="chat-messages" id="chatMessages">
+        <!-- Messages de bienvenue -->
+        <div class="message received show">
+            <div class="message-content">
+                <p><i class="fas fa-hand-wave"></i> Bonjour !</p>
+                <p>Je suis l'assistant virtuel de Woila Community.</p>
+                <p>Je vais vous guider pour votre adhésion en quelques étapes simples.</p>
+                <p>Êtes-vous prêt à commencer ?</p>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Prénom</label>
-                            <input type="text" class="form-control" name="prenom" required>
+            <div class="message-time">Maintenant</div>
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Ville</label>
-                            <input type="text" class="form-control" name="ville">
+        
+        <!-- Bouton pour commencer -->
+        <div class="message sent show" id="startButtonMessage">
+            <div class="message-content">
+                <button class="start-btn" onclick="startAdhesion()">
+                    <i class="fas fa-rocket"></i> Commencer l'adhésion
+                </button>
                         </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Profession</label>
-                            <input type="text" class="form-control" name="profession">
+            <div class="message-time">Maintenant</div>
                         </div>
-                        <div class="col-md-6">
-                            <label class="form-label">Statut</label>
-                            <input type="text" class="form-control" name="statut">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Mini CV</label>
-                        <textarea class="form-control" name="mini_cv" rows="3"></textarea>
                     </div>
 
-                    <!-- Réseaux sociaux -->
-                    <h5 class="text-primary">Réseaux sociaux</h5>
-                    <div class="mb-3">
-                        <label class="form-label">Facebook</label>
-                        <input type="url" class="form-control" name="facebook">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">LinkedIn</label>
-                        <input type="url" class="form-control" name="linkedin">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Twitter</label>
-                        <input type="url" class="form-control" name="twitter">
+    <!-- Formulaire caché -->
+    <form id="adhesionForm" method="post" enctype="multipart/form-data" style="display: none;">
+        {% csrf_token %}
+        
+        <!-- Section Compte -->
+        <div class="form-section" id="section-compte">
+            <input type="text" name="username" placeholder="Nom utilisateur" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Mot de passe" required>
+            <input type="password" name="confirm_password" placeholder="Confirmer mot de passe" required>
+            <input type="file" name="photo" accept="image/*">
                     </div>
 
-                    <!-- Informations d'adhésion -->
-                    <h5 class="text-primary">Détails d’adhésion</h5>
-                    <div class="mb-3">
-                        <label class="form-label">Type d'adhésion</label>
-                        <select class="form-select" name="type_adhesion">
+        <!-- Section Personnelles -->
+        <div class="form-section" id="section-personnelles">
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="text" name="ville" placeholder="Ville">
+            <input type="text" name="profession" placeholder="Profession">
+            <input type="text" name="statut" placeholder="Statut">
+            <textarea name="mini_cv" placeholder="Mini CV" rows="3"></textarea>
+                    </div>
+
+        <!-- Section Réseaux sociaux -->
+        <div class="form-section" id="section-reseaux">
+            <input type="url" name="facebook" placeholder="Facebook">
+            <input type="url" name="linkedin" placeholder="LinkedIn">
+            <input type="url" name="twitter" placeholder="Twitter">
+                    </div>
+
+        <!-- Section Adhésion -->
+        <div class="form-section" id="section-adhesion">
+            <select name="type_adhesion">
+                <option value="">Type d'adhésion</option>
                             <option value="etudiant">Étudiant</option>
                             <option value="freelance">Freelance</option>
                             <option value="entrepreneur">Entrepreneur</option>
                             <option value="autre">Autre</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Date d'adhésion</label>
-                        <input type="date" class="form-control" name="date_adhesion" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Montant</label>
-                        <input type="number" step="0.01" max="99999999.99" class="form-control" name="montant">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Moyen de paiement</label>
-                        <select class="form-select" name="moyen_paiement">
+            <input type="date" name="date_adhesion" required>
+            <input type="number" name="montant" placeholder="Montant" step="0.01">
+            <select name="moyen_paiement">
+                <option value="">Moyen de paiement</option>
                             <option value="momo">Mobile Money</option>
                             <option value="cb">Carte Bancaire</option>
                         </select>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">Numéro de transaction</label>
-                        <input type="text" class="form-control" name="numero_transaction">
-                    </div>
-
-                    <!-- Soumission -->
-                    <div class="text-center mt-4">
-                        <button type="submit" class="btn btn-primary px-5">Valider l’adhésion</button>
+            <input type="text" name="numero_transaction" placeholder="Numéro de transaction">
                     </div>
                 </form>
 
-            </div>
+    <!-- Zone de saisie -->
+    <div class="chat-input-area">
+        <div class="input-group">
+            <input type="text" id="currentInput" class="form-control" placeholder="Tapez votre réponse..." disabled>
+            <button type="button" id="sendBtn" class="btn btn-primary" disabled>
+                <i class="bi bi-send"></i>
+            </button>
         </div>
     </div>
+</div>
+
+<style>
+/* Variables CSS pour les thèmes */
+:root {
+    --woila-primary: #0a53be;
+    --woila-primary-hover: #003582;
+    --woila-secondary: #667eea;
+    --woila-accent: #764ba2;
+    --chat-bg: #f8f9fa;
+    --chat-header-bg: linear-gradient(135deg, var(--woila-secondary) 0%, var(--woila-accent) 100%);
+    --message-sent-bg: #e3edfa; /* bleu très clair Woila pour utilisateur */
+    --message-received-bg: #eaf2fb;
+    --text-primary: #1c1e21;
+    --text-secondary: #65676b;
+    --text-sent: #fff; /* toujours blanc */
+    --border-color: #e4e6ea;
+    --input-bg: #ffffff;
+    --input-border: #e4e6ea;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --warning-color: #ffc107;
+}
+
+/* Mode sombre */
+[data-bs-theme="dark"] {
+    --chat-bg: #1a1a1a;
+    --message-sent-bg: #1b3358; /* bleu foncé doux pour utilisateur */
+    --message-received-bg: #14213d;
+    --text-primary: #ffffff;
+    --text-secondary: #b0b0b0;
+    --text-sent: #fff;
+    --border-color: #404040;
+    --input-bg: #2d2d2d;
+    --input-border: #404040;
+}
+
+.chat-container {
+    max-width: 600px;
+    margin: 20px auto;
+    background: var(--chat-bg);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    overflow: hidden;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    transition: all 0.3s ease;
+}
+
+.chat-header {
+    background: var(--chat-header-bg);
+    color: white;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    animation: slideDown 0.5s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.chat-avatar {
+    font-size: 2.5rem;
+    color: rgba(255,255,255,0.9);
+    animation: bounce 1s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+.chat-info h5 {
+    margin: 0;
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.chat-info small {
+    opacity: 0.8;
+    font-size: 0.9rem;
+}
+
+.chat-messages {
+    height: 500px;
+    overflow-y: auto;
+    padding: 20px;
+    background: var(--chat-bg);
+    transition: background-color 0.3s ease;
+}
+
+.message {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    animation: slideIn 0.3s ease-out;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.message.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.message.sent {
+    align-items: flex-end;
+}
+
+.message.received {
+    align-items: flex-start;
+}
+
+.message-content {
+    max-width: 80%;
+    padding: 12px 16px;
+    border-radius: 18px;
+    position: relative;
+    word-wrap: break-word;
+    animation: messagePop 0.4s ease-out;
+}
+
+@keyframes messagePop {
+    0% {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.message.sent .message-content {
+    background: var(--message-sent-bg);
+    color: var(--text-sent);
+    border-bottom-right-radius: 4px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.message.received .message-content {
+    background: var(--message-received-bg);
+    color: var(--text-primary);
+    border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.message-content p {
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.message-time {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 4px;
+    padding: 0 4px;
+    animation: fadeIn 0.5s ease-out 0.3s both;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.chat-input-area {
+    padding: 15px 20px;
+    background: var(--message-received-bg);
+    border-top: 1px solid var(--border-color);
+    animation: slideUp 0.5s ease-out;
+    transition: all 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+}
+
+#currentInput {
+    border-radius: 20px;
+    border: 1px solid var(--input-border);
+    padding: 12px 16px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+#currentInput:focus {
+    outline: none;
+    border-color: var(--woila-primary);
+    box-shadow: 0 0 0 2px rgba(10, 83, 190, 0.2);
+}
+
+#sendBtn {
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--woila-primary);
+    border: none;
+    transition: all 0.3s ease;
+}
+
+#sendBtn:hover {
+    background: var(--woila-primary-hover);
+    transform: scale(1.05);
+}
+
+#sendBtn:disabled {
+    background: var(--border-color);
+    color: var(--text-secondary);
+}
+
+.form-section {
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+.form-section input,
+.form-section select,
+.form-section textarea {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 10px;
+    border: 1px solid var(--input-border);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+.form-section input:focus,
+.form-section select:focus,
+.form-section textarea:focus {
+    outline: none;
+    border-color: var(--woila-primary);
+    box-shadow: 0 0 0 2px rgba(10, 83, 190, 0.2);
+}
 
 
 
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0,132,255,0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(0,132,255,0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0,132,255,0);
+    }
+}
 
-{% endblock %}
+.summary-item {
+    background: var(--input-bg);
+    padding: 8px 12px;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    animation: slideInLeft 0.3s ease-out;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
 
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
 
-{% comment %}<script>
-        const steps = document.querySelectorAll('.step');
-        const nextBtn = document.getElementById('nextBtn');
-        const prevBtn = document.getElementById('prevBtn');
-        const form = document.getElementById('multiStepForm');
-        const progressBar = document.getElementById('progressBar');
-        let currentStep = 0;
+.confirm-btn {
+    background: var(--woila-primary);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+    animation: bounceIn 0.6s ease-out;
+}
 
-        function updateFormStep() {
-            steps.forEach((step, index) => {
-                step.classList.toggle('active', index === currentStep);
-            });
+@keyframes bounceIn {
+    0% {
+        transform: scale(0.3);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(0.9);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
 
-            prevBtn.disabled = currentStep === 0;
-            nextBtn.textContent = currentStep === steps.length - 1 ? 'Soumettre' : 'Suivant';
-            validateStep();
-            progressBar.style.width = `${((currentStep + 1) / steps.length) * 100}%`;
+.confirm-btn:hover {
+    background: var(--woila-primary-hover);
+    transform: scale(1.02);
+}
+
+.form-fields {
+    animation: slideInUp 0.4s ease-out;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.field-group {
+    animation: fadeInUp 0.3s ease-out;
+}
+
+.field-group:nth-child(1) { animation-delay: 0.1s; }
+.field-group:nth-child(2) { animation-delay: 0.2s; }
+.field-group:nth-child(3) { animation-delay: 0.3s; }
+.field-group:nth-child(4) { animation-delay: 0.4s; }
+.field-group:nth-child(5) { animation-delay: 0.5s; }
+.field-group:nth-child(6) { animation-delay: 0.6s; }
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.completed-section {
+    background: var(--input-bg);
+    border: 1px solid var(--success-color);
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 10px;
+    animation: slideInRight 0.4s ease-out;
+    color: var(--text-primary);
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.start-btn {
+    background: var(--chat-header-bg);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    animation: pulse 2s infinite;
+}
+
+.start-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.start-btn:active {
+    transform: scale(0.95);
+}
+
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 16px;
+    background: var(--message-received-bg);
+    border-radius: 18px;
+    max-width: 60px;
+    animation: typing 1.4s infinite;
+}
+
+.typing-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--text-secondary);
+    animation: typingDot 1.4s infinite;
+}
+
+.typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingDot {
+    0%, 60%, 100% {
+        transform: translateY(0);
+        opacity: 0.4;
+    }
+    30% {
+        transform: translateY(-10px);
+        opacity: 1;
+    }
+}
+
+.username-feedback {
+    font-size: 0.85em;
+    margin-top: 2px;
+    min-height: 18px;
+    color: #dc3545;
+}
+
+</style>
+
+<script>
+let currentStep = 0;
+let formData = {};
+let completedSections = [];
+const steps = [
+    {
+        title: "Créer un compte",
+        fields: [
+            {name: 'username', label: 'Nom utilisateur', type: 'text', required: true},
+            {name: 'email', label: 'Email', type: 'email', required: true},
+            {name: 'password', label: 'Mot de passe', type: 'password', required: true},
+            {name: 'confirm_password', label: 'Confirmer mot de passe', type: 'password', required: true},
+            {name: 'photo', label: 'Photo de profil', type: 'file', required: false}
+        ],
+        message: "Commençons par créer votre compte. Veuillez remplir les informations suivantes :"
+    },
+    {
+        title: "Informations personnelles", 
+        fields: [
+            {name: 'nom', label: 'Nom', type: 'text', required: true},
+            {name: 'prenom', label: 'Prénom', type: 'text', required: true},
+            {name: 'ville', label: 'Ville', type: 'text', required: false},
+            {name: 'profession', label: 'Profession', type: 'text', required: false},
+            {name: 'statut', label: 'Statut', type: 'text', required: false},
+            {name: 'mini_cv', label: 'Mini CV', type: 'textarea', required: false}
+        ],
+        message: "Maintenant, vos informations personnelles :"
+    },
+    {
+        title: "Réseaux sociaux",
+        fields: [
+            {name: 'facebook', label: 'Facebook', type: 'url', required: false},
+            {name: 'linkedin', label: 'LinkedIn', type: 'url', required: false},
+            {name: 'twitter', label: 'Twitter', type: 'url', required: false}
+        ],
+        message: "Vos réseaux sociaux (optionnel) :"
+    },
+    {
+        title: "Détails d'adhésion",
+        fields: [
+            {name: 'type_adhesion', label: 'Type d\'adhésion', type: 'select', options: [
+                {value: 'etudiant', label: 'Étudiant'},
+                {value: 'freelance', label: 'Freelance'},
+                {value: 'entrepreneur', label: 'Entrepreneur'},
+                {value: 'autre', label: 'Autre'}
+            ], required: true},
+            {name: 'date_adhesion', label: 'Date d\'adhésion', type: 'date', required: true},
+            {name: 'montant', label: 'Montant', type: 'number', required: false},
+            {name: 'moyen_paiement', label: 'Moyen de paiement', type: 'select', options: [
+                {value: 'momo', label: 'Mobile Money'},
+                {value: 'cb', label: 'Carte Bancaire'}
+            ], required: false},
+            {name: 'numero_transaction', label: 'Numéro de transaction', type: 'text', required: false}
+        ],
+        message: "Enfin, les détails de votre adhésion :"
+    }
+];
+
+document.addEventListener('DOMContentLoaded', function() {
+    const chatMessages = document.getElementById('chatMessages');
+    const currentInput = document.getElementById('currentInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const form = document.getElementById('adhesionForm');
+
+    // Afficher les messages Django dans la conversation (erreurs serveur)
+    {% if messages %}
+    {% for message in messages %}
+    addMessage(`<i class='fas fa-exclamation-triangle'></i> {{ message|escapejs }}`);
+    {% endfor %}
+    {% endif %}
+
+    // Fonction globale pour démarrer l'adhésion
+    window.startAdhesion = function() {
+        // Supprimer le bouton de démarrage
+        const startButtonMessage = document.getElementById('startButtonMessage');
+        if (startButtonMessage) {
+            startButtonMessage.remove();
         }
+        
+        // Démarrer le processus d'adhésion
+        setTimeout(() => {
+            showStep(currentStep);
+        }, 500);
+    };
 
-        function validateStep() {
-            const inputs = steps[currentStep].querySelectorAll('input, select');
-            let allFilled = true;
-            inputs.forEach(input => {
-                if (input.hasAttribute('required') && !input.value) {
-                    allFilled = false;
+    function showTypingIndicator() {
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'message received';
+        typingDiv.innerHTML = `
+            <div class="message-content">
+                <div class="typing-indicator">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(typingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        return typingDiv;
+    }
+
+    function addMessage(content, isSent = false) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${isSent ? 'sent' : 'received'}`;
+        
+        const contentDiv = document.createElement('div');
+        contentDiv.className = 'message-content';
+        
+        if (typeof content === 'string') {
+            contentDiv.innerHTML = content;
+        } else {
+            contentDiv.appendChild(content);
+        }
+        
+        messageDiv.appendChild(contentDiv);
+        
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'message-time';
+        timeDiv.textContent = new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
+        messageDiv.appendChild(timeDiv);
+        
+        chatMessages.appendChild(messageDiv);
+        
+        // Animation d'apparition
+        setTimeout(() => {
+            messageDiv.classList.add('show');
+        }, 100);
+        
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        return messageDiv;
+    }
+
+    function createCompletedSection(stepIndex) {
+        const step = steps[stepIndex];
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'completed-section';
+        sectionDiv.id = `section-${stepIndex}`;
+        
+        let content = `<h6><i class="fas fa-check-circle"></i> ${step.title}</h6>`;
+        
+        sectionDiv.innerHTML = content;
+        
+        return sectionDiv;
+    }
+
+    function createFormFields(step) {
+        const fieldsContainer = document.createElement('div');
+        fieldsContainer.className = 'form-fields';
+        
+        step.fields.forEach(field => {
+            const fieldDiv = document.createElement('div');
+            fieldDiv.className = 'field-group';
+            fieldDiv.style.marginBottom = '15px';
+            
+            const label = document.createElement('label');
+            label.textContent = field.label;
+            label.style.fontWeight = '600';
+            label.style.marginBottom = '5px';
+            label.style.display = 'block';
+            label.style.color = '#1c1e21';
+            
+            let input;
+            let feedbackDiv = null;
+            
+            if (field.type === 'select') {
+                input = document.createElement('select');
+                input.style.width = '100%';
+                input.style.padding = '10px';
+                input.style.borderRadius = '8px';
+                input.style.border = '1px solid #e4e6ea';
+                input.style.fontSize = '0.95rem';
+                
+                const defaultOption = document.createElement('option');
+                defaultOption.value = '';
+                defaultOption.textContent = `Sélectionnez ${field.label.toLowerCase()}`;
+                input.appendChild(defaultOption);
+                
+                field.options.forEach(option => {
+                    const optionElement = document.createElement('option');
+                    optionElement.value = option.value;
+                    optionElement.textContent = option.label;
+                    input.appendChild(optionElement);
+                });
+            } else if (field.type === 'textarea') {
+                input = document.createElement('textarea');
+                input.rows = 3;
+                input.style.width = '100%';
+                input.style.padding = '10px';
+                input.style.borderRadius = '8px';
+                input.style.border = '1px solid #e4e6ea';
+                input.style.fontSize = '0.95rem';
+                input.style.resize = 'vertical';
+            } else {
+                input = document.createElement('input');
+                input.type = field.type;
+                input.style.width = '100%';
+                input.style.padding = '10px';
+                input.style.borderRadius = '8px';
+                input.style.border = '1px solid #e4e6ea';
+                input.style.fontSize = '0.95rem';
+            }
+            
+            input.name = field.name;
+            input.required = field.required;
+            input.placeholder = field.label;
+            
+            // Pour la date d'adhésion, la rendre automatique et non modifiable
+            if (field.name === 'date_adhesion') {
+                const today = new Date().toISOString().split('T')[0];
+                input.value = today;
+                input.readOnly = true;
+                input.style.backgroundColor = '#f8f9fa';
+                input.style.color = '#6c757d';
+                formData[field.name] = today;
+            }
+            
+            // Pré-remplir avec les données existantes seulement si elles existent
+            if (formData[field.name] && formData[field.name].trim() !== '') {
+                input.value = formData[field.name];
+            }
+            
+            // Ajout feedback visuel sous le champ username
+            if (field.name === 'username') {
+                feedbackDiv = document.createElement('div');
+                feedbackDiv.className = 'username-feedback';
+                feedbackDiv.style.fontSize = '0.85em';
+                feedbackDiv.style.marginTop = '2px';
+                feedbackDiv.style.minHeight = '18px';
+                feedbackDiv.style.color = '#dc3545';
+                fieldDiv.appendChild(feedbackDiv);
+            }
+            
+            // Ajouter l'événement pour stocker les données et validation en temps réel
+            input.addEventListener('input', function() {
+                formData[field.name] = this.value;
+                
+                // Validation en temps réel pour les mots de passe
+                if (field.name === 'password' || field.name === 'confirm_password') {
+                    const password = formData.password || '';
+                    const confirmPassword = formData.confirm_password || '';
+                    
+                    if (confirmPassword && password !== confirmPassword) {
+                        this.style.borderColor = '#dc3545';
+                        this.style.boxShadow = '0 0 0 2px rgba(220, 53, 69, 0.2)';
+                    } else if (confirmPassword) {
+                        this.style.borderColor = '#28a745';
+                        this.style.boxShadow = '0 0 0 2px rgba(40, 167, 69, 0.2)';
+                    } else {
+                        this.style.borderColor = '#e4e6ea';
+                        this.style.boxShadow = 'none';
+                    }
+                }
+                
+                // Validation en temps réel pour l'email
+                if (field.name === 'email') {
+                    const email = this.value;
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    
+                    if (email && !emailRegex.test(email)) {
+                        this.style.borderColor = '#dc3545';
+                        this.style.boxShadow = '0 0 0 2px rgba(220, 53, 69, 0.2)';
+                    } else if (email) {
+                        this.style.borderColor = '#28a745';
+                        this.style.boxShadow = '0 0 0 2px rgba(40, 167, 69, 0.2)';
+                    } else {
+                        this.style.borderColor = '#e4e6ea';
+                        this.style.boxShadow = 'none';
+                    }
+                }
+                
+                // Validation et disponibilité du username en AJAX
+                if (field.name === 'username') {
+                    const username = this.value.trim();
+                    feedbackDiv.textContent = '';
+                    this.style.borderColor = '#e4e6ea';
+                    this.style.boxShadow = 'none';
+                    if (username.length < 3) {
+                        feedbackDiv.textContent = "Le nom d'utilisateur doit contenir au moins 3 caractères.";
+                        feedbackDiv.style.color = '#dc3545';
+                        this.style.borderColor = '#dc3545';
+                        return;
+                    }
+                    // Caractères autorisés (alphanumérique, _ et -)
+                    if (!/^[a-zA-Z0-9_-]+$/.test(username)) {
+                        feedbackDiv.textContent = "Caractères autorisés : lettres, chiffres, _ et -";
+                        feedbackDiv.style.color = '#dc3545';
+                        this.style.borderColor = '#dc3545';
+                        return;
+                    }
+                    // Appel AJAX pour vérifier la disponibilité
+                    feedbackDiv.textContent = 'Vérification...';
+                    feedbackDiv.style.color = '#888';
+                    fetch('/adhesion/check-username/?username=' + encodeURIComponent(username))
+                        .then(resp => resp.json())
+                        .then(data => {
+                            if (data.available) {
+                                feedbackDiv.textContent = "Nom d'utilisateur disponible !";
+                                feedbackDiv.style.color = '#28a745';
+                                this.style.borderColor = '#28a745';
+                            } else {
+                                feedbackDiv.textContent = "Ce nom d'utilisateur est déjà pris.";
+                                feedbackDiv.style.color = '#dc3545';
+                                this.style.borderColor = '#dc3545';
+                            }
+                        })
+                        .catch(() => {
+                            feedbackDiv.textContent = "Erreur lors de la vérification.";
+                            feedbackDiv.style.color = '#dc3545';
+                            this.style.borderColor = '#dc3545';
+                        });
                 }
             });
-            nextBtn.disabled = !allFilled;
+            
+            fieldDiv.appendChild(label);
+            fieldDiv.appendChild(input);
+            fieldsContainer.appendChild(fieldDiv);
+        });
+        
+        return fieldsContainer;
+    }
+
+    function showStep(stepIndex) {
+        if (stepIndex >= steps.length) {
+            showSummary();
+            return;
         }
 
-        nextBtn.addEventListener('click', () => {
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                updateFormStep();
-            } else {
-                form.submit();
-            }
-        });
+        const step = steps[stepIndex];
+        console.log('Affichage de l\'étape:', stepIndex, step.title);
+        
+        // Afficher l'indicateur de frappe
+        const typingIndicator = showTypingIndicator();
+        
+        setTimeout(() => {
+            // Supprimer l'indicateur de frappe
+            typingIndicator.remove();
+            
+            // Afficher le message
+            addMessage(step.message);
+            
+            setTimeout(() => {
+                // Créer et afficher les champs
+                const fieldsContainer = createFormFields(step);
+                const messageDiv = addMessage(fieldsContainer, true);
+                
+                // Ajouter un ID unique au message pour cette section
+                messageDiv.id = `message-${stepIndex}`;
+                messageDiv.setAttribute('data-step', stepIndex);
+                
+                // Le bouton valider n'apparaît que lors de la modification
+                // Pas de bouton valider ici pour les étapes normales
+                
+                // Activer le bouton d'envoi principal pour les étapes normales
+                sendBtn.disabled = false;
+                currentInput.disabled = true;
+                currentInput.placeholder = "Cliquez sur Envoyer pour valider cette section";
+            }, 500);
+        }, 1500);
+    }
 
-        prevBtn.addEventListener('click', () => {
-            if (currentStep > 0) {
-                currentStep--;
-                updateFormStep();
-            }
-        });
-
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('input', validateStep);
-        });
-
-        updateFormStep();
-    </script>
-
-    <script>
-        // Vérification AJAX pour username et email
-        const usernameInput = document.getElementById("username");
-        const emailInput = document.getElementById("email");
-
-        function checkAvailability(field, value) {
-            return fetch(`/check_${field}/?${field}=${value}`)
-                .then(response => response.json());
-        }
-
-        function showValidationResult(input, message, isValid) {
-            const feedback = input.nextElementSibling;
-            if (isValid) {
-                input.classList.remove("is-invalid");
-                input.classList.add("is-valid");
-                feedback.textContent = "";
-            } else {
-                input.classList.remove("is-valid");
-                input.classList.add("is-invalid");
-                feedback.textContent = message;
-            }
-        }
-
-        usernameInput.addEventListener("blur", () => {
-            const value = usernameInput.value;
-            if (value.trim() !== "") {
-                checkAvailability("username", value).then(data => {
-                    showValidationResult(usernameInput, data.message, data.available);
+    function showSummary() {
+        const summaryDiv = document.createElement('div');
+        summaryDiv.innerHTML = `
+            <h6><i class="fas fa-clipboard-list"></i> Résumé de votre adhésion</h6>
+            <div class="summary-item"><strong>Nom d'utilisateur:</strong> ${formData.username || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Email:</strong> ${formData.email || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Nom:</strong> ${formData.nom || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Prénom:</strong> ${formData.prenom || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Type d'adhésion:</strong> ${formData.type_adhesion || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Date d'adhésion:</strong> ${formData.date_adhesion || 'Non renseigné'}</div>
+            <div class="summary-item"><strong>Montant:</strong> ${formData.montant || 'Non renseigné'} FCFA</div>
+        `;
+        
+        addMessage(summaryDiv);
+        
+        // Message final sans commandes de modification
+        const finalMessageDiv = document.createElement('div');
+        finalMessageDiv.innerHTML = `
+            <h6><i class="fas fa-info-circle"></i> Votre adhésion est prête !</h6>
+            <p>Cliquez sur le bouton "Confirmer l'adhésion" ci-dessous pour finaliser votre inscription.</p>
+        `;
+        
+        addMessage(finalMessageDiv);
+        
+        // Bouton final de confirmation
+        const confirmDiv = document.createElement('div');
+        confirmDiv.innerHTML = `
+            <button class="confirm-btn" id="final-confirm-btn">
+                <i class="fas fa-rocket"></i> Confirmer l'adhésion
+            </button>
+        `;
+        
+        addMessage(confirmDiv);
+        
+        // Event listener pour le bouton final
+        setTimeout(() => {
+            const finalConfirmBtn = document.getElementById('final-confirm-btn');
+            if (finalConfirmBtn) {
+                finalConfirmBtn.addEventListener('click', function() {
+                    // Cacher toutes les commandes
+                    const commandsDiv = document.querySelector('.command-item');
+                    if (commandsDiv) {
+                        commandsDiv.parentElement.style.display = 'none';
+                    }
+                    
+                    // Remplir le formulaire caché avec les données
+                    Object.keys(formData).forEach(key => {
+                        const field = form.querySelector(`[name="${key}"]`);
+                        if (field) field.value = formData[key];
+                    });
+                    
+                    // Soumettre le formulaire
+                    form.submit();
                 });
             }
-        });
+        }, 100);
+        
+        // Désactiver la saisie car plus de commandes
+        currentInput.disabled = true;
+        currentInput.placeholder = "Utilisez le bouton Confirmer ci-dessus";
+        sendBtn.disabled = true;
+    }
 
-        emailInput.addEventListener("blur", () => {
-            const value = emailInput.value;
-            if (value.trim() !== "") {
-                checkAvailability("email", value).then(data => {
-                    showValidationResult(emailInput, data.message, data.available);
-                });
+    function validateAndSaveSection(stepIndex, messageElement) {
+        const step = steps[stepIndex];
+        let isValid = true;
+        let missingFields = [];
+        
+        // Récupérer les valeurs des champs
+        const inputs = messageElement.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            formData[input.name] = input.value;
+            if (step.fields.find(f => f.name === input.name && f.required) && (!input.value || input.value.trim() === '')) {
+                isValid = false;
+                const field = step.fields.find(f => f.name === input.name);
+                missingFields.push(field.label);
             }
         });
-    </script>
-
-    <!-- Résumé final avant soumission -->
-    <div class="step d-none" data-step="5">
-        <h5 class="mb-3"><i class="bi bi-check2-circle"></i> Vérification des informations</h5>
-        <ul class="list-group">
-            <li class="list-group-item"><strong>Nom d'utilisateur :</strong> <span id="summary-username"></span>
-            </li>
-            <li class="list-group-item"><strong>Email :</strong> <span id="summary-email"></span></li>
-            <li class="list-group-item"><strong>Nom :</strong> <span id="summary-nom"></span></li>
-            <li class="list-group-item"><strong>Prénom :</strong> <span id="summary-prenom"></span></li>
-            <li class="list-group-item"><strong>Téléphone :</strong> <span id="summary-telephone"></span></li>
-            <li class="list-group-item"><strong>Facebook :</strong> <span id="summary-facebook"></span></li>
-            <li class="list-group-item"><strong>Date d'adhésion :</strong> <span id="summary-date"></span></li>
-        </ul>
-        <button type="button" class="btn btn-secondary mt-4 prev-step">Précédent</button>
-        <button type="submit" class="btn btn-success mt-4">Soumettre</button>
-    </div>
-
-    <script>
-        // Mise à jour du résumé à l'étape 4 -> 5
-        function updateSummary() {
-            document.getElementById("summary-username").textContent = document.getElementById("username").value;
-            document.getElementById("summary-email").textContent = document.getElementById("email").value;
-            document.getElementById("summary-nom").textContent = document.getElementById("nom").value;
-            document.getElementById("summary-prenom").textContent = document.getElementById("prenom").value;
-            document.getElementById("summary-telephone").textContent = document.getElementById("telephone").value;
-            document.getElementById("summary-facebook").textContent = document.getElementById("facebook").value;
-            document.getElementById("summary-date").textContent = document.getElementById("date_adhesion").value;
+        
+        if (!isValid) {
+            addMessage(`<i class="fas fa-exclamation-triangle"></i> Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`);
+            return;
         }
-
-        // Appelé juste avant d'afficher l'étape 5
-        const nextButtons = document.querySelectorAll('.next-step');
-        nextButtons.forEach((btn) => {
-            btn.addEventListener('click', () => {
-                const step = parseInt(btn.closest('[data-step]').dataset.step);
-                if (step === 4) updateSummary();
-            });
+        
+        // Désactiver les champs
+        inputs.forEach(input => {
+            input.disabled = true;
+            input.style.opacity = '0.6';
+            input.style.backgroundColor = '#f8f9fa';
         });
-    </script>{% endcomment %}
+        
+        // Afficher confirmation
+        addMessage(`<i class="fas fa-check-circle"></i> ${step.title} modifié avec succès !`, true);
+        
+        // Continuer avec la section suivante si nécessaire
+        if (stepIndex < steps.length - 1) {
+            currentStep = stepIndex + 1;
+            setTimeout(() => {
+                showStep(currentStep);
+            }, 2000);
+        } else {
+            setTimeout(() => {
+                showSummary();
+            }, 2000);
+        }
+    }
+
+    function disableFormFields(messageElement) {
+        const inputs = messageElement.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.disabled = true;
+            input.style.opacity = '0.6';
+            input.style.backgroundColor = '#f8f9fa';
+        });
+    }
+
+    // Gérer l'envoi pour les étapes normales
+    sendBtn.addEventListener('click', function() {
+        // Valider les champs requis de l'étape actuelle
+        const currentStepData = steps[currentStep];
+        let isValid = true;
+        let missingFields = [];
+        let validationErrors = [];
+        
+        // Validation spécifique pour chaque étape
+        if (currentStep === 0) { // Créer un compte
+            // Validation de l'email
+            const email = formData.email || '';
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                validationErrors.push("Format d'email invalide");
+                isValid = false;
+            }
+            
+            // Validation de la correspondance des mots de passe
+            const password = formData.password || '';
+            const confirmPassword = formData.confirm_password || '';
+            
+            if (password !== confirmPassword) {
+                validationErrors.push("Les mots de passe ne correspondent pas");
+                isValid = false;
+            }
+            
+            // Validation de la longueur du mot de passe
+            if (password.length < 6) {
+                validationErrors.push("Le mot de passe doit contenir au moins 6 caractères");
+                isValid = false;
+            }
+            
+            // Validation du nom d'utilisateur
+            const username = formData.username || '';
+            if (username.length < 3) {
+                validationErrors.push("Le nom d'utilisateur doit contenir au moins 3 caractères");
+                isValid = false;
+            }
+        }
+        
+        // Validation générale des champs requis
+        currentStepData.fields.forEach(field => {
+            if (field.required && (!formData[field.name] || formData[field.name].trim() === '')) {
+                isValid = false;
+                missingFields.push(field.label);
+            }
+        });
+        
+        if (!isValid) {
+            let errorMessage = '';
+            if (missingFields.length > 0) {
+                errorMessage += `<i class="fas fa-exclamation-triangle"></i> Veuillez remplir tous les champs obligatoires : ${missingFields.join(', ')}`;
+            }
+            if (validationErrors.length > 0) {
+                if (errorMessage) errorMessage += '<br>';
+                errorMessage += `<i class="fas fa-times-circle"></i> ${validationErrors.join('<br>')}`;
+            }
+            addMessage(errorMessage);
+            return;
+        }
+        
+        // Trouver le message contenant les champs et les désactiver
+        const targetMessage = document.getElementById(`message-${currentStep}`);
+        if (targetMessage) {
+            disableFormFields(targetMessage);
+        }
+        
+        // Afficher un message de confirmation
+        addMessage(`<i class="fas fa-check-circle"></i> ${currentStepData.title} validé !`, true);
+        
+        // Afficher la section complétée seulement après validation
+        setTimeout(() => {
+            const completedSection = createCompletedSection(currentStep);
+            addMessage(completedSection, true);
+        }, 1000);
+        
+        currentStep++;
+        
+        setTimeout(() => {
+            showStep(currentStep);
+        }, 2000);
+    });
+
+    // Le formulaire ne démarre plus automatiquement
+    // Il faut cliquer sur le bouton "Commencer l'adhésion"
+    
+    // Détecter les changements de thème et mettre à jour les couleurs
+    function updateThemeColors() {
+        const isDark = document.documentElement.getAttribute('data-bs-theme') === 'dark';
+        const chatContainer = document.querySelector('.chat-container');
+        const chatMessages = document.querySelector('.chat-messages');
+        const chatInputArea = document.querySelector('.chat-input-area');
+        
+        if (chatContainer) {
+            chatContainer.style.background = isDark ? '#1a1a1a' : '#f8f9fa';
+        }
+        if (chatMessages) {
+            chatMessages.style.background = isDark ? '#1a1a1a' : '#f8f9fa';
+        }
+        if (chatInputArea) {
+            chatInputArea.style.background = isDark ? '#2d2d2d' : '#ffffff';
+            chatInputArea.style.borderTopColor = isDark ? '#404040' : '#e4e6ea';
+        }
+    }
+    
+    // Observer les changements d'attribut data-bs-theme
+    const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && mutation.attributeName === 'data-bs-theme') {
+                updateThemeColors();
+            }
+        });
+    });
+    
+    // Démarrer l'observation
+    observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['data-bs-theme']
+    });
+    
+    // Appliquer les couleurs initiales
+    updateThemeColors();
+});
+</script>
+{% endblock %}
