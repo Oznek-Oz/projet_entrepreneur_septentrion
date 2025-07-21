@@ -28,6 +28,7 @@ urlpatterns = [
     path("blog/", include("blog.urls")),  # Include the blog app's URLs
     path("contact/", include('contact.urls')),
     path("galerie/", include("galerie.urls")),  # Include the galerie app's URLs
+    path('don/', include('don.urls')),
     path('newsletter/', include('newsletter.urls')),
 ]
 

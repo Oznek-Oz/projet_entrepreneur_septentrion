@@ -68,7 +68,7 @@ class Membres(AbstractBaseUser, PermissionsMixin):
     numero_transaction = models.CharField(max_length=100, null=True, blank=True)
 
     date_inscription = models.DateTimeField(default=timezone.now)
-    is_actif = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)  # Champ requis pour AbstractBaseUser
     is_staff = models.BooleanField(default=False)  # accès admin
 
     objects = MembreManager()

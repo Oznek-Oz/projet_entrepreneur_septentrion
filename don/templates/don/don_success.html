@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+{% block content %}
+<link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
+<style>
+    .success-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 2px 16px rgba(60,60,60,0.08);
+        padding: 32px;
+        font-family: 'Roboto', Arial, sans-serif;
+        text-align: center;
+    }
+    .success-icon {
+        width: 80px;
+        height: 80px;
+        background: #10b981;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        font-size: 40px;
+        color: white;
+    }
+    .success-title {
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: #10b981;
+        margin-bottom: 16px;
+    }
+    .success-message {
+        color: #6b7280;
+        margin-bottom: 24px;
+        line-height: 1.6;
+    }
+    .don-details {
+        background: #f9fafb;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 24px;
+        text-align: left;
+    }
+    .don-details h3 {
+        margin-bottom: 16px;
+        color: #374151;
+        font-size: 1.1rem;
+    }
+    .detail-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 8px;
+        padding: 4px 0;
+    }
+    .detail-label {
+        font-weight: 500;
+        color: #6b7280;
+    }
+    .detail-value {
+        color: #374151;
+    }
+    .btn-primary {
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        transition: background 0.2s;
+    }
+    .btn-primary:hover {
+        background: #1765c1;
+    }
+    .btn-secondary {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        border-radius: 6px;
+        padding: 12px 24px;
+        font-size: 1rem;
+        font-weight: 500;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin-left: 12px;
+        transition: background 0.2s;
+    }
+    .btn-secondary:hover {
+        background: #e5e7eb;
+    }
+</style>
+
+<div class="success-container" data-aos="fade-up">
+    <div class="success-icon">✓</div>
+    <h1 class="success-title">Paiement réussi !</h1>
+    <p class="success-message">
+        Merci pour votre don ! Votre contribution nous aide à continuer notre mission.
+    </p>
+    
+    <div class="don-details">
+        <h3>Détails du don</h3>
+        <div class="detail-row">
+            <span class="detail-label">Nom :</span>
+            <span class="detail-value">{{ don.nom }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Montant :</span>
+            <span class="detail-value">{{ don.montant }} FCFA</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Méthode :</span>
+            <span class="detail-value">{{ don.get_methode_display }}</span>
+        </div>
+        <div class="detail-row">
+            <span class="detail-label">Date :</span>
+            <span class="detail-value">{{ don.date|date:"d/m/Y H:i" }}</span>
+        </div>
+        {% if don.transaction_id %}
+        <div class="detail-row">
+            <span class="detail-label">Référence :</span>
+            <span class="detail-value">{{ don.transaction_id }}</span>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div>
+        <a href="{% url 'don:don' %}" class="btn-primary">Faire un autre don</a>
+        <a href="{% url 'accueil:accueil' %}" class="btn-secondary">Retour à l'accueil</a>
+    </div>
+</div>
+{% endblock %} 
