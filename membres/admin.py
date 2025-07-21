@@ -1,27 +1,27 @@
 from django.contrib import admin
+from .models import Publication, Ressource, MessagePublication, Membres
+@admin.register(Membres)
+class MembresAdmin(admin.ModelAdmin):
+    list_display = ('prenom', 'nom', 'email', 'profession', 'is_promoteur', 'is_actif')
+    list_filter = ('is_promoteur', 'is_actif', 'profession')
+    search_fields = ('prenom', 'nom', 'email', 'profession')
 
-from membres.models import Membres, Discussion, Message
+class PublicationAdmin(admin.ModelAdmin):
+    list_display = ('titre', 'membre', 'type', 'date_publication', 'valide')
+    list_filter = ('type', 'valide', 'date_publication')
+    search_fields = ('titre', 'description', 'membre__username')
+    actions = ['valider_publications']
 
+    def valider_publications(self, request, queryset):
+        queryset.update(valide=True)
+        self.message_user(request, "Les publications sélectionnées ont été validées.")
+    valider_publications.short_description = "Valider les publications sélectionnées"
 
-# Register your models here.
+admin.site.register(Publication, PublicationAdmin)
+admin.site.register(Ressource)
 
-@admin.register(Discussion)
-class DiscussionAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'auteur', 'date_creation')
-    list_display_links = ('auteur', 'titre')
-    search_fields = ('titre' , 'auteur' , 'date_création')
-    list_filter = ('titre', 'auteur', 'date_creation')
-
-@admin.register(Message)
-class MessageAdmin(admin.ModelAdmin):
-    list_display = ('discussion', 'auteur', 'contenu', 'auteur_repondu', 'date_envoi')
-    list_display_links = ('discussion' , 'auteur' , 'auteur_repondu')
-    search_fields = ('auteur__username' , 'discussion', 'reponse_a__auteur__username')
-    list_filter = ('auteur', 'discussion')
-
-    def auteur_repondu(self, obj):
-        if obj.reponse_a and obj.reponse_a.auteur:
-            return obj.reponse_a.auteur.username
-        return "—"
-    auteur_repondu.short_description = "Répond à"
-    auteur_repondu.admin_order_field = 'reponse_a__auteur__username'
+@admin.register(MessagePublication)
+class MessagePublicationAdmin(admin.ModelAdmin):
+    list_display = ('membre', 'publication_titre', 'date_envoi', 'lu')
+    list_filter = ('lu', 'date_envoi')
+    search_fields = ('membre__username', 'publication_titre', 'message')

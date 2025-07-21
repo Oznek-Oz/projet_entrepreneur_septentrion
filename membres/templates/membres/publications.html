@@ -3,14 +3,8 @@
 
 <style>
     @keyframes fadeSlideIn {
-        0% {
-            opacity: 0;
-            transform: translateY(20px);
-        }
-        100% {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
     }
 
     .publication-form {
@@ -23,8 +17,99 @@
         margin-bottom: 50px;
     }
 
-    .form-label {
+    .old-publications {
+        background-color: #1f2b45;
+        border-radius: 15px;
+        padding: 30px;
+        color: white;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+    }
+
+    .publication-item {
+        background-color: #2d3e5e;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.3s ease;
+        display: flex;
+        flex-direction: row;
+        gap: 18px;
+        align-items: flex-start;
+        min-height: 120px;
+    }
+
+    .publication-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .publication-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 15px;
+    }
+
+    .publication-title {
+        font-weight: 700;
+        font-size: 1.2rem;
+        color: #0dcaf0;
+        margin: 0;
+    }
+
+    .publication-meta {
+        font-size: 0.85rem;
+        color: #a0aec0;
+        margin-top: 5px;
+    }
+
+    .publication-content {
+        margin-top: 15px;
+        line-height: 1.6;
+    }
+
+    .publication-image {
+        max-width: 220px;
+        max-height: 180px;
+        border-radius: 8px;
+        margin-top: 0;
+        object-fit: cover;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+
+    .publication-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .publication-actions .btn {
+        padding: 5px 12px;
+        font-size: 0.9rem;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .tag {
+        display: inline-block;
+        background-color: #0dcaf0;
+        color: #1f2b45;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
         font-weight: bold;
+        margin-right: 8px;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #a0aec0;
+    }
+
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 15px;
     }
 
     .form-control, .form-select {
@@ -40,101 +125,138 @@
     .btn-publish {
         background-color: #0dcaf0;
         border: none;
+        
     }
 
     .btn-publish:hover {
         background-color: #31d2f2;
     }
-
-    .bi {
-        margin-right: 8px;
-    }
-
-    .old-publications {
-        border-radius: 15px;
-        padding: 30px;
-        color: white;
-        box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-    }
-
-    .publication-item {
-        border-bottom: 1px solid #2d3e5e;
-        padding: 15px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .publication-details {
-        max-width: 75%;
-    }
-
-    .publication-actions a {
-        margin-left: 15px;
-        color: #0dcaf0;
-        text-decoration: none;
-        font-weight: 600;
-        transition: color 0.3s ease;
-    }
-
-    .publication-actions a:hover {
-        color: #31d2f2;
-    }
-
-    .publication-title {
-        font-weight: 700;
-        font-size: 1.1rem;
-        margin-bottom: 5px;
-    }
-
-    .publication-meta {
-        font-size: 0.85rem;
-        color: #a0aec0;
-    }
 </style>
 
 <div class="container py-5">
     <h3 class="mb-4 text-info text-center fw-bold"><i class="bi bi-pencil-square"></i> Nouvelle Publication</h3>
-<!--formulaire pour enregistrer une publication -->
+    
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        <ul>
+          {% for field in form %}
+            {% for error in field.errors %}
+              <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
+    <!-- Formulaire de publication -->
     <div class="publication-form">
-        <form method="POST" enctype="multipart/form-data">
+        <form method="POST" enctype="multipart/form-data" id="publicationForm" action="{% url 'publications' %}">
             {% csrf_token %}
+            
             <div class="mb-3">
-                <label for="titre" class="form-label"><i class="bi bi-type"></i> Titre</label>
-                <input type="text" class="form-control" id="titre" name="titre" placeholder="Titre de la publication" required>
+                <label class="form-label">Titre</label>
+                {{ form.titre }}
             </div>
-
             <div class="mb-3">
-                <label for="contenu" class="form-label"><i class="bi bi-body-text"></i> Contenu</label>
-                <textarea class="form-control" id="contenu" name="contenu" rows="5" placeholder="Écrivez votre contenu ici..." required></textarea>
+                <label class="form-label">Type</label>
+                {{ form.type }}
             </div>
-
             <div class="mb-3">
-                <label for="categorie" class="form-label"><i class="bi bi-tags"></i> Catégorie</label>
-                <input type="text" class="form-control" id="categorie" name="categorie" placeholder="Exemple : Événement, Annonce, Projet..." required>
-            </div>
+                <label class="form-label">Description</label>
+                <button type="button" class="btn btn-outline-dark btn-sm mb-2" style="float:right;" data-bs-toggle="modal" data-bs-target="#assistantAIModal">
+                    <i class="bi bi-robot"></i> Générer avec l'Assistant AI
+                </button>
+</div>
 
+<!-- Modal Assistant AI 
+<div class="modal fade" id="assistantAIModal" tabindex="-1" aria-labelledby="assistantAIModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="assistantAIModalLabel"><i class="bi bi-robot"></i> Assistant AI pour rédiger votre publication</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <form id="assistantAIForm">
+          <div class="mb-3">
+            <label for="aiPrompt" class="form-label">Décrivez le sujet ou l'idée :</label>
+            <textarea id="aiPrompt" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">
+              <i class="bi bi-magic"></i> Générer le texte
+            </button>
+          </div>
+        </form>
+        <div id="aiSuggestionContainer" class="mt-4" style="display:none;">
+          <h5 class="fw-bold">Texte proposé :</h5>
+          <div id="aiSuggestion" class="border rounded p-3 bg-light"></div>
+          <button type="button" class="btn btn-success mt-2" id="insertAISuggestion">Insérer dans la description</button>
+        </div>
+        <div id="aiError" class="alert alert-danger mt-3" style="display:none;"></div>
+      </div>
+    </div>
+  </div>
+</div>-->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('assistantAIForm');
+  const suggestionContainer = document.getElementById('aiSuggestionContainer');
+  const suggestionText = document.getElementById('aiSuggestion');
+  const errorDiv = document.getElementById('aiError');
+  const insertBtn = document.getElementById('insertAISuggestion');
+  const descriptionField = document.getElementById('{{ form.description.id_for_label }}') || document.querySelector('[name="description"]');
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    suggestionContainer.style.display = 'none';
+    errorDiv.style.display = 'none';
+    const prompt = document.getElementById('aiPrompt').value;
+    if (!prompt.trim()) return;
+    // Appel AJAX à la vue assistant_publication
+    fetch('{% url "assistant_publication" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'X-CSRFToken': '{{ csrf_token }}'
+      },
+      body: 'prompt=' + encodeURIComponent(prompt)
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.suggestion) {
+        suggestionText.innerHTML = data.suggestion.replace(/\n/g, '<br>');
+        suggestionContainer.style.display = 'block';
+      } else if (data.error) {
+        errorDiv.textContent = data.error;
+        errorDiv.style.display = 'block';
+      }
+    })
+    .catch(err => {
+      errorDiv.textContent = 'Erreur lors de la génération.';
+      errorDiv.style.display = 'block';
+    });
+  });
+
+  insertBtn.addEventListener('click', function() {
+    if (descriptionField) {
+      descriptionField.value = suggestionText.textContent;
+    }
+    var modal = bootstrap.Modal.getInstance(document.getElementById('assistantAIModal'));
+    modal.hide();
+  });
+});
+</script>
+                {{ form.description }}
+            </div>
             <div class="mb-3">
-                <label for="type" class="form-label"><i class="bi bi-layers"></i> Type de publication</label>
-                <select class="form-select" id="type" name="type" required>
-                    <option value="" disabled selected>Choisir un type...</option>
-                    <option value="article">Article</option>
-                    <option value="projet">Projet</option>
-                    <option value="annonce">Annonce</option>
-                    <option value="autre">Autre</option>
-                </select>
+                <label class="form-label">Fichier joint (optionnel)</label>
+                {{ form.fichier_joint }}
             </div>
-
-            <div class="mb-3">
-                <label for="date_post" class="form-label"><i class="bi bi-calendar-event"></i> Date de publication</label>
-                <input type="date" class="form-control" id="date_post" name="date_post" required>
-            </div>
-
-            <div class="mb-4">
-                <label for="image" class="form-label"><i class="bi bi-image"></i> Image d'illustration</label>
-                <input type="file" class="form-control" id="image" name="image">
-            </div>
-
             <div class="text-center">
                 <button type="submit" class="btn btn-publish px-5 py-2 fw-bold">
                     <i class="bi bi-upload"></i> Publier
@@ -143,31 +265,297 @@
         </form>
     </div>
 
-    <!-- pour afficher les anciennes publications -->
-    <div class="old-publications">
-        <h4 class="mb-4 text-info fw-bold"><i class="bi bi-journal-text"></i> Mes anciennes publications</h4>
+    <!-- Modal de succès -->
+    <div class="modal fade" id="modalSuccess" tabindex="-1" aria-labelledby="modalSuccessLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-success text-white">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="modalSuccessLabel"><i class="bi bi-check-circle"></i> Succès</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            {% for message in messages %}
+                {% if message.tags == 'success' %}{{ message }}{% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
 
+    <!-- Modal d'erreur -->
+    <div class="modal fade" id="modalError" tabindex="-1" aria-labelledby="modalErrorLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-danger text-white">
+          <div class="modal-header border-0">
+            <h5 class="modal-title" id="modalErrorLabel"><i class="bi bi-exclamation-triangle"></i> Erreur</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+          </div>
+          <div class="modal-body">
+            {% for message in messages %}
+                {% if message.tags == 'error' %}{{ message }}{% endif %}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liste des publications -->
+    <div class="old-publications">
+        <h4 class="mb-4 text-info fw-bold"><i class="bi bi-journal-text"></i> Toutes les Publications</h4>
         {% if publications %}
             {% for pub in publications %}
-                <div class="publication-item">
-                    <div class="publication-details">
-                        <div class="publication-title">{{ pub.titre }}</div>
-                        <div class="publication-meta">
-                            <span><i class="bi bi-tags"></i> {{ pub.categorie }}</span> |
-                            <span><i class="bi bi-layers"></i> {{ pub.type }}</span> |
-                            <span><i class="bi bi-calendar-event"></i> {{ pub.date_post|date:"d M Y" }}</span>
+            <div class="publication-item">
+                {% if pub.fichier_joint %}
+                    {% with ext=pub.fichier_joint.url|lower|slice:'-4:' ext5=pub.fichier_joint.url|lower|slice:'-5:' %}
+                        {% if ext == '.jpg' or ext5 == '.jpeg' or ext == '.png' or ext == '.gif' %}
+                            <img src="{{ pub.fichier_joint.url }}" class="publication-image me-3" alt="Image publication" loading="lazy">
+                        {% endif %}
+                    {% endwith %}
+                {% endif %}
+                <div style="flex:1;min-width:0;">
+                    <div class="publication-header">
+                        <div>
+                            <h5 class="publication-title">{{ pub.titre }}</h5>
+                            <div class="publication-meta">
+                                <span class="tag">{{ pub.get_type_display }}</span>
+                                <span class="text-muted"><i class="bi bi-person"></i> {{ pub.membre.username }}</span>
+                                <span class="text-muted"><i class="bi bi-calendar-event"></i> {{ pub.date_publication|date:"d M Y à H:i" }}</span>
+                                <span class="ms-2 fw-bold">
+                                    {% if pub.valide %}
+                                        <span class="text-success"><i class="bi bi-check-circle"></i> Validée</span>
+                                    {% else %}
+                                        <span class="text-warning"><i class="bi bi-hourglass-split"></i> En attente</span>
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
+                        {% if request.user == pub.membre or request.user.is_superuser %}
+                        <div class="publication-actions">
+                            <a href="{% url 'modifier_publication' pub.id %}" 
+                               class="btn btn-outline-info btn-sm edit-publication" 
+                               title="Modifier">
+                                <i class="bi bi-pencil-square"></i> Modifier
+                            </a>
+                            <button type="button" class="btn btn-outline-danger btn-sm delete-publication" 
+                                    data-id="{{ pub.id }}" data-titre="{{ pub.titre }}" title="Supprimer">
+                                <i class="bi bi-trash"></i>
+                            </button>
+                        </div>
+                        {% endif %}
                     </div>
-                    <div class="publication-actions">
-                        <a href="{% url 'modifier_publication' pub.id %}" title="Modifier"><i class="bi bi-pencil-square"></i> Modifier</a>
-                        <a href="{% url 'supprimer_publication' pub.id %}" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cette publication ?');"><i class="bi bi-trash"></i> Supprimer</a>
+                    
+                    <div class="publication-content">
+                        <span class="text-truncate-description" style="max-height:4.5em;overflow:hidden;position:relative;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;text-overflow:ellipsis;">
+                            {{ pub.description|truncatewords:30 }}
+                        </span>
+                        {% if pub.description|length > 200 %}
+                            <span class="text-primary ms-2" style="cursor:pointer;font-size:0.95em;" data-bs-toggle="modal" data-bs-target="#publicationModal{{ pub.id }}">Lire plus...</span>
+                        {% endif %}
+{% for pub in publications %}
+<!-- Modal pour lecture complète -->
+<div class="modal fade" id="publicationModal{{ pub.id }}" tabindex="-1" aria-labelledby="publicationModalLabel{{ pub.id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="publicationModalLabel{{ pub.id }}">{{ pub.titre }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <span class="tag">{{ pub.get_type_display }}</span>
+          <span class="text-muted ms-2"><i class="bi bi-person"></i> {{ pub.membre.username }}</span>
+          <span class="text-muted ms-2"><i class="bi bi-calendar-event"></i> {{ pub.date_publication|date:"d M Y à H:i" }}</span>
+        </div>
+        {% if pub.fichier_joint %}
+          {% with ext=pub.fichier_joint.url|lower|slice:'-4:' ext5=pub.fichier_joint.url|lower|slice:'-5:' %}
+          {% if ext == '.jpg' or ext5 == '.jpeg' or ext == '.png' or ext == '.gif' %}
+            <img src="{{ pub.fichier_joint.url }}" class="img-fluid mb-3" alt="Image publication" style="max-width:100%;max-height:350px;object-fit:contain;display:block;margin:auto;">
+          {% endif %}
+          {% endwith %}
+        {% endif %}
+        <div class="mt-3">
+          <p class="fs-5">{{ pub.description|linebreaks }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<style>
+  .text-truncate-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 4.5em;
+  }
+</style>
                     </div>
+                    
+                    {% if pub.fichier_joint %}
+                        {% with ext=pub.fichier_joint.url|lower|slice:'-4:' ext5=pub.fichier_joint.url|lower|slice:'-5:' %}
+                        <div class="mt-3">
+                            {% if ext == '.jpg' or ext5 == '.jpeg' or ext == '.png' or ext == '.gif' %}
+                                <!-- Image déjà affichée ci-dessus, juste un lien de téléchargement -->
+                                <a href="{{ pub.fichier_joint.url }}" class="btn btn-outline-secondary btn-sm mt-2" target="_blank">
+                                    <i class="bi bi-download"></i> Télécharger l'image
+                                </a>
+                            {% else %}
+                                <a href="{{ pub.fichier_joint.url }}" class="btn btn-outline-secondary btn-sm" target="_blank">
+                                    <i class="bi bi-download"></i> Télécharger le fichier joint
+                                </a>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+                    {% endif %}
                 </div>
+            </div>
             {% endfor %}
         {% else %}
-            <p class="text-muted">Vous n'avez encore aucune publication.</p>
+            <div class="empty-state">
+                <i class="bi bi-journal-x"></i>
+                <h5>Aucune publication pour le moment</h5>
+                <p>Commencez par créer votre première publication</p>
+            </div>
         {% endif %}
     </div>
 </div>
+
+<!-- Modal Modification (chargé via AJAX) -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content bg-dark text-white">
+      <div class="modal-header border-secondary">
+        <h5 class="modal-title">Modifier Publication</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="editModalBody">
+        <!-- Le formulaire de modification sera chargé ici dynamiquement sans footer inutile -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Petit pop-up de confirmation suppression -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteLabel"><i class="bi bi-exclamation-triangle"></i> Confirmation</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body">
+        <p>Voulez-vous vraiment supprimer la publication <span id="deletePubTitre" class="fw-bold"></span> ?</p>
+      </div>
+      <div class="modal-footer">
+        <form id="deletePublicationForm" method="post" action="">
+          {% csrf_token %}
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Annuler</button>
+          <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialisation des modals
+    const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    const successModal = new bootstrap.Modal(document.getElementById('modalSuccess'));
+    const errorModal = new bootstrap.Modal(document.getElementById('modalError'));
+
+    // Gestion des messages
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                successModal.show();
+            {% elif message.tags == 'error' %}
+                errorModal.show();
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    // Gestion des clics sur Modifier
+    document.querySelectorAll('.edit-publication').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            fetch(this.href)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('editModalBody').innerHTML = html;
+                    editModal.show();
+                    // Ajout du submit handler pour afficher le pop-up de succès
+                    const form = document.getElementById('editModalBody').querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', function(ev) {
+                            ev.preventDefault();
+                            const formData = new FormData(form);
+                            fetch(form.action, {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(response => {
+                                if (response.redirected) {
+                                    window.location.href = response.url;
+                                } else if (response.ok) {
+                                    editModal.hide();
+                                    successModal.show();
+                                    setTimeout(() => window.location.reload(), 1200);
+                                }
+                            });
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        });
+    });
+
+    // Gestion des clics sur Supprimer (petit pop-up)
+    document.querySelectorAll('.delete-publication').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pubId = this.dataset.id;
+            const pubTitre = this.dataset.titre;
+            document.getElementById('deletePubTitre').textContent = pubTitre;
+            const form = document.getElementById('deletePublicationForm');
+            form.action = `/membres/publications/supprimer/${pubId}/`;
+            confirmDeleteModal.show();
+        });
+    });
+
+    var deleteForm = document.getElementById('deletePublicationForm');
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const form = this;
+            fetch(form.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': form.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => {
+                if (response.redirected) {
+                    window.location.href = response.url;
+                } else {
+                    confirmDeleteModal.hide();
+                    const successModal = new bootstrap.Modal(document.getElementById('modalSuccess'));
+                    successModal.show();
+                    setTimeout(() => window.location.reload(), 1200);
+                }
+            });
+        });
+    }
+});
+</script>
 
 {% endblock %}

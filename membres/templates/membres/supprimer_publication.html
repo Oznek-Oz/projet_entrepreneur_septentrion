@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <div class="publication-form text-center">
+        <h3 class="mb-4 text-danger"><i class="bi bi-exclamation-triangle"></i> Confirmer la suppression</h3>
+        
+        <div class="alert alert-warning">
+            <p>Êtes-vous sûr de vouloir supprimer définitivement la publication :</p>
+            <h5 class="fw-bold">"{{ publication.titre }}" ?</h5>
+        </div>
+        
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mt-4">
+                <button type="submit" class="btn btn-danger px-4">
+                    <i class="bi bi-trash"></i> Confirmer la suppression
+                </button>
+                <a href="{% url 'publications' %}" class="btn btn-secondary px-4 ms-2">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

@@ -160,3 +160,7 @@ BASE_URL = "http://localhost:8000"  # Pour le développement local
 # BASE_URL = "https://votre-domaine.com"  # Pour la production
 CINETPAY_NOTIFY_URL = f"{BASE_URL}/don/cinetpay/notify/"
 CINETPAY_RETURN_URL = f"{BASE_URL}/don/cinetpay/return/"
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'   # dossier physique où seront stockées les images uploadées
+

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <h3 class="mb-4 text-info text-center fw-bold"><i class="bi bi-envelope"></i> Messages de la communauté</h3>
+    {% if messages_pub %}
+        <ul class="list-group">
+            {% for msg in messages_pub %}
+            <li class="list-group-item {% if not msg.lu %}list-group-item-warning{% endif %}">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ msg.publication_titre }}</strong><br>
+                        <span>{{ msg.message }}</span>
+                    </div>
+                    <span class="text-muted" style="font-size:0.9em;">{{ msg.date_envoi|date:"d/m/Y H:i" }}</span>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <div class="alert alert-info text-center">Aucun message pour le moment.</div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,3 +1,7 @@
+from membres.models import Membres
+def promoteurs(request):
+    promoteurs = Membres.objects.filter(is_promoteur=True, is_actif=True)
+    return render(request, 'accueil/promoteurs.html', {'promoteurs': promoteurs})
 from django.shortcuts import render
 from don.forms import DonForm
 from django.http import HttpResponseRedirect
@@ -8,7 +12,10 @@ def accueil(request):
     """
     Render the home page.
     """
-    return render(request, 'accueil/index.html')
+    from membres.models import Publication, Membres
+    publications = Publication.objects.filter(valide=True).order_by('-date_publication')[:3]
+    promoteurs = Membres.objects.filter(is_promoteur=True, is_actif=True)
+    return render(request, 'accueil/index.html', {'publications': publications, 'promoteurs': promoteurs})
 
 def a_propos(request):
     """

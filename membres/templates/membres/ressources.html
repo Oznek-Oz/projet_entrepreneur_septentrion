@@ -5,35 +5,26 @@
     <p class="mb-5">Accédez à nos modèles, guides, documents utiles et contacts spécialisés.</p>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for res in ressources %}
         <div class="col">
             <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">📄 Modèle de CV</h5>
-                    <p class="card-text">Télécharge un modèle professionnel pour ton CV.</p>
-                    <a href="#" class="btn btn-outline-primary">Télécharger</a>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title text-info">{{ res.titre }}</h5>
+                    <p class="card-text small">{{ res.description }}</p>
+                    <div class="mt-auto">
+                        <a href="{{ res.fichier.url }}" class="btn btn-primary btn-sm w-100" download>
+                            <i class="bi bi-download"></i> Télécharger
+                        </a>
+                    </div>
+                </div>
+                <div class="card-footer bg-light text-muted small">
+                    Catégorie : {{ res.get_categorie_display }}
                 </div>
             </div>
         </div>
-
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">📘 Guide de rédaction</h5>
-                    <p class="card-text">Conseils pour rédiger lettres, rapports, et demandes.</p>
-                    <a href="#" class="btn btn-outline-primary">Voir le guide</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">👥 Contacts utiles</h5>
-                    <p class="card-text">Liste des personnes ressources dans chaque département.</p>
-                    <a href="#" class="btn btn-outline-primary">Voir les contacts</a>
-                </div>
-            </div>
-        </div>
+        {% empty %}
+        <div class="col-12 text-center text-muted">Aucune ressource disponible pour le moment.</div>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

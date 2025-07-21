@@ -54,14 +54,14 @@
 
     <!-- Barre de recherche -->
     <form method="get" class="search-bar d-flex flex-wrap justify-content-center mb-4">
-        <input type="text" name="nom" placeholder="Nom..." class="form-control w-auto">
-        <input type="text" name="ville" placeholder="Ville..." class="form-control w-auto">
-        <input type="text" name="secteur" placeholder="Secteur d’activité..." class="form-control w-auto">
+        <input type="text" name="nom" placeholder="Nom..." class="form-control w-auto" value="{{ search_nom|default:'' }}">
+        <input type="text" name="ville" placeholder="Ville..." class="form-control w-auto" value="{{ search_ville|default:'' }}">
+        <input type="text" name="secteur" placeholder="Secteur d’activité..." class="form-control w-auto" value="{{ search_secteur|default:'' }}">
         <select name="statut" class="form-control w-auto">
-            <option value="">Tous les statuts</option>
-            <option value="membre">Membre</option>
-            <option value="président">Président</option>
-            <option value="partenaire">Partenaire</option>
+            <option value="" {% if not search_statut %}selected{% endif %}>Tous les statuts</option>
+            <option value="membre" {% if search_statut == 'membre' %}selected{% endif %}>Membre</option>
+            <option value="président" {% if search_statut == 'président' %}selected{% endif %}>Président</option>
+            <option value="partenaire" {% if search_statut == 'partenaire' %}selected{% endif %}>Partenaire</option>
         </select>
         <button type="submit" class="btn btn-info">Rechercher</button>
     </form>
@@ -71,26 +71,88 @@
 
         {% for membre in membres %}
         <div class="col">
-            <div class="card member-card p-3 h-100">
+            <div class="card member-card p-3 h-100 annuaire-link" style="cursor:pointer;" 
+                data-nom="{{ membre.prenom }} {{ membre.nom }}"
+                data-photo="{% if membre.photo %}{{ membre.photo.url }}{% else %}/static/images/default-user.png{% endif %}"
+                data-ville="{{ membre.ville }}"
+                data-secteur="{{ membre.secteur }}"
+                data-profession="{{ membre.profession }}"
+                data-statut="{{ membre.statut }}"
+                data-mini_cv="{{ membre.mini_cv|default:'' }}"
+                data-email="{{ membre.email }}"
+                data-facebook="{{ membre.facebook }}"
+                data-linkedin="{{ membre.linkedin }}"
+                data-twitter="{{ membre.twitter }}">
                 <div class="d-flex align-items-center mb-3">
-                    <img src="{{ membre.photo.url }}" alt="Photo" class="profile-pic me-3">
+                    {% if membre.photo %}
+                        <img src="{{ membre.photo.url }}" alt="Photo" class="profile-pic me-3">
+                    {% else %}
+                        <img src="/static/images/default-user.png" alt="Photo" class="profile-pic me-3">
+                    {% endif %}
                     <div>
                         <h5 class="mb-0">{{ membre.nom }}</h5>
                         <small class="text-muted">{{ membre.ville }} | {{ membre.secteur }}</small>
                     </div>
                 </div>
                 <p class="text-muted" style="min-height: 60px;">{{ membre.mini_cv|truncatewords:25 }}</p>
-
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="social-icons">
                         {% if membre.facebook %}<a href="{{ membre.facebook }}" target="_blank"><i class="fab fa-facebook"></i></a>{% endif %}
                         {% if membre.linkedin %}<a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin"></i></a>{% endif %}
                         {% if membre.twitter %}<a href="{{ membre.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>{% endif %}
                     </div>
-                    <a href="{% url 'contacter_membre' membre.id %}" class="btn btn-outline-success btn-sm">Contacter</a>
                 </div>
             </div>
         </div>
+<!-- Modal infos membre -->
+<div class="modal fade" id="membreModal" tabindex="-1" aria-labelledby="membreModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title" id="membreModalLabel">Informations du membre</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+      </div>
+      <div class="modal-body text-center" id="membreModalBody">
+        <!-- Contenu dynamique -->
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const membreModal = new bootstrap.Modal(document.getElementById('membreModal'));
+    document.querySelectorAll('.annuaire-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const photo = this.dataset.photo || '/static/images/default-user.png';
+            const nom = this.dataset.nom;
+            const ville = this.dataset.ville;
+            const secteur = this.dataset.secteur;
+            const profession = this.dataset.profession;
+            const statut = this.dataset.statut;
+            const mini_cv = this.dataset.mini_cv;
+            const email = this.dataset.email;
+            const facebook = this.dataset.facebook;
+            const linkedin = this.dataset.linkedin;
+            const twitter = this.dataset.twitter;
+            document.getElementById('membreModalBody').innerHTML = `
+                <img src="${photo}" class="rounded-circle mb-3" style="width:120px;height:120px;object-fit:cover;">
+                <h5 class="fw-bold mb-1">${nom}</h5>
+                <div class="mb-2 text-muted">${statut ? statut : ''} ${profession ? ' - ' + profession : ''}</div>
+                <div class="mb-2"><i class="bi bi-geo-alt"></i> ${ville ? ville : ''} ${secteur ? ' | ' + secteur : ''}</div>
+                <div class="mb-2"><i class="bi bi-envelope"></i> ${email ? email : ''}</div>
+                <div class="mb-2"><i class="bi bi-person-lines-fill"></i> ${mini_cv ? mini_cv : ''}</div>
+                <div class="mb-2">
+                    ${facebook ? `<a href='${facebook}' target='_blank'><i class='fab fa-facebook fa-lg me-2'></i></a>` : ''}
+                    ${linkedin ? `<a href='${linkedin}' target='_blank'><i class='fab fa-linkedin fa-lg me-2'></i></a>` : ''}
+                    ${twitter ? `<a href='${twitter}' target='_blank'><i class='fab fa-twitter fa-lg'></i></a>` : ''}
+                </div>
+            `;
+            membreModal.show();
+        });
+    });
+});
+</script>
         {% empty %}
         <div class="col">
             <div class="alert alert-warning w-100">Aucun membre trouvé avec ces critères.</div>
