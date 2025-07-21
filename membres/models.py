@@ -1,12 +1,29 @@
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin, User
+from django.db import models
+from django.utils import timezone
+from django.conf import settings
+
+# Ressources à télécharger (mémoire, CV, cours, etc.)
+class Ressource(models.Model):
+    CATEGORIES = [
+        ("memoire", "Mémoire"),
+        ("cv", "Modèle de CV"),
+        ("cours", "Cours"),
+        ("guide", "Guide"),
+        ("autre", "Autre"),
+    ]
+    titre = models.CharField(max_length=200)
+    description = models.TextField(blank=True)
+    fichier = models.FileField(upload_to="ressources/")
+    categorie = models.CharField(max_length=20, choices=CATEGORIES, default="autre")
+    date_ajout = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.titre
 """
 Modèles pour la gestion des membres de la communauté.
 Inclut un utilisateur personnalisé (Membre) avec de nombreux champs de profil.
 """
-
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from django.db import models
-from django.utils import timezone
-from django.conf import settings
 
 
 class MembreManager(BaseUserManager):
@@ -71,6 +88,7 @@ class Membres(AbstractBaseUser, PermissionsMixin):
     is_actif = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)  # accès admin
 
+    is_promoteur = models.BooleanField(default=False, help_text="Ce membre est un promoteur de l'association.")
     objects = MembreManager()
 
     USERNAME_FIELD = 'username'
@@ -93,6 +111,16 @@ class Discussion(models.Model):
     def __str__(self):
         return self.titre
 
+class MessagePublication(models.Model):
+    from django.conf import settings
+    membre = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='messages_publication')
+    publication_titre = models.CharField(max_length=255)
+    message = models.TextField()
+    date_envoi = models.DateTimeField(auto_now_add=True)
+    lu = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Message à {self.membre.username} concernant '{self.publication_titre}'"
 class Message(models.Model):
     discussion = models.ForeignKey(Discussion, on_delete=models.CASCADE, related_name='messages')
     auteur = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -102,3 +130,22 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.auteur.username}: {self.contenu[:30]}..."
+
+
+class Publication(models.Model):
+    TYPE_CHOICES = [
+        ('projet', 'Projet'),
+        ('offre', 'Offre'),
+        ('evenement', 'Événement'),
+    ]
+
+    membre = models.ForeignKey(Membres, on_delete=models.CASCADE)
+    titre = models.CharField(max_length=200)
+    type = models.CharField(max_length=20, choices=TYPE_CHOICES)
+    description = models.TextField()
+    fichier_joint = models.FileField(upload_to='publications/', blank=True, null=True)
+    date_publication = models.DateTimeField(auto_now_add=True)
+    valide = models.BooleanField(default=False, help_text="La publication doit être validée par un administrateur pour être affichée.")
+
+    def __str__(self):
+        return self.titre

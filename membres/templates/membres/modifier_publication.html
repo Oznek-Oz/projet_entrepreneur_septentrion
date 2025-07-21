@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-5">
+    <h3 class="mb-4 text-info text-center fw-bold"><i class="bi bi-pencil-square"></i> Modifier Publication</h3>
+    
+    <div class="publication-form">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <div class="text-center mt-4">
+                <button type="submit" class="btn btn-primary px-4">
+                    <i class="bi bi-save"></i> Enregistrer
+                </button>
+                <a href="{% url 'publications' %}" class="btn btn-secondary px-4 ms-2">
+                    <i class="bi bi-x-circle"></i> Annuler
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

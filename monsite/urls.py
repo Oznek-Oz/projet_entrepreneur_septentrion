@@ -14,9 +14,11 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from django.contrib.auth import views as auth_views
 
 from monsite import settings
 
@@ -29,6 +31,7 @@ urlpatterns = [
     path("contact/", include('contact.urls')),
     path("galerie/", include("galerie.urls")),  # Include the galerie app's URLs
     path('newsletter/', include('newsletter.urls')),
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
 ]
 
 if settings.DEBUG:

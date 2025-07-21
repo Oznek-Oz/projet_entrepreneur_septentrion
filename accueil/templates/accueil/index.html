@@ -458,70 +458,60 @@
 
     </section>
 
-    <!--Promoteurs-->
+    <!--Promoteurs dynamiques-->
     <section class="container my-5 " data-aos="fade-up">
         <div class="d-flex flex-lg-wrap align-items-center pb-3 m-5 me-0 ms-4 gap-2">
             <div class="barre-verticale"></div>
             <h2 class="h2 display-5 fw-bold" data-aos="fade-right" data-aos-delay="100">Promoteurs</h2>
         </div>
-
         <div class="container marketing">
-            <!-- Three columns of text below the carousel -->
             <div class="row">
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
-                     data-aos-delay="200">
+                {% for promoteur in promoteurs %}
+                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in" data-aos-delay="{{ 200|add:forloop.counter0|add:forloop.counter0|add:forloop.counter0 }}">
                     <div class="cercle d-flex justify-content-center align-items-center">
-                        <img src="{% static 'images/logo.jpg' %}" alt="">
+                        {% if promoteur.photo %}
+                        <img src="{{ promoteur.photo.url }}" alt="Photo de {{ promoteur.prenom }}" style="height:120px;width:120px;object-fit:cover;border-radius:50%;">
+                        {% else %}
+                        <i class="bi bi-person-circle text-secondary" style="font-size:4rem;"></i>
+                        {% endif %}
                     </div>
-
-                    <h2 class="fw-normal">Mme Pavoshko</h2>
+                    <h2 class="fw-normal">{{ promoteur.prenom }} {{ promoteur.nom }}</h2>
+                    <p>{{ promoteur.profession }}</p>
                     <p>
-                        Some representative placeholder content for the three columns of
-                        text below the carousel. This is the first column.
-                    </p>
-                    <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-1s" href="#">View
-                            details &raquo;</a>
+                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-{{ forloop.counter }}s" data-bs-toggle="modal" data-bs-target="#promoteurModal{{ promoteur.id }}">Voir détails &raquo;</a>
                     </p>
                 </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
-                     data-aos-delay="300">
-                    <div class="cercle d-flex justify-content-center align-items-center">
-                        <img src="{% static 'images/logo.jpg' %}" alt="">
+                <!-- Modal détails promoteur -->
+                <div class="modal fade" id="promoteurModal{{ promoteur.id }}" tabindex="-1" aria-labelledby="promoteurModalLabel{{ promoteur.id }}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="promoteurModalLabel{{ promoteur.id }}">{{ promoteur.prenom }} {{ promoteur.nom }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                      </div>
+                      <div class="modal-body">
+                        {% if promoteur.photo %}
+                        <img src="{{ promoteur.photo.url }}" class="img-fluid rounded mb-3" alt="Photo de {{ promoteur.prenom }}" style="max-height:180px;object-fit:cover;">
+                        {% endif %}
+                        <p><strong>Profession :</strong> {{ promoteur.profession }}</p>
+                        <p><strong>Ville :</strong> {{ promoteur.ville }}</p>
+                        <p><strong>Mini CV :</strong> {{ promoteur.mini_cv|linebreaks }}</p>
+                        <p><strong>Email :</strong> {{ promoteur.email }}</p>
+                        <div class="mt-2">
+                            {% if promoteur.facebook %}<a href="{{ promoteur.facebook }}" target="_blank" class="btn btn-outline-primary btn-sm me-1"><i class="bi bi-facebook"></i></a>{% endif %}
+                            {% if promoteur.linkedin %}<a href="{{ promoteur.linkedin }}" target="_blank" class="btn btn-outline-info btn-sm me-1"><i class="bi bi-linkedin"></i></a>{% endif %}
+                            {% if promoteur.twitter %}<a href="{{ promoteur.twitter }}" target="_blank" class="btn btn-outline-secondary btn-sm"><i class="bi bi-twitter"></i></a>{% endif %}
+                        </div>
+                      </div>
                     </div>
-
-                    <h2 class="fw-normal">Mr Hawkings</h2>
-                    <p>
-                        Some representative placeholder content for the three columns of
-                        text below the carousel. This is the first column.
-                    </p>
-                    <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-2s" href="#">View
-                            details &raquo;</a>
-                    </p>
+                  </div>
                 </div>
-                <!-- /.col-lg-4 -->
-                <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center" data-aos="zoom-in"
-                     data-aos-delay="400">
-                    <div class="cercle d-flex justify-content-center align-items-center">
-                        <img src="{% static 'images/logo.jpg' %}" alt="">
-                    </div>
-
-                    <h2 class="fw-normal">Mme Pearson</h2>
-                    <p>
-                        Some representative placeholder content for the three columns of
-                        text below the carousel. This is the first column.
-                    </p>
-                    <p>
-                        <a class="btn bg-gdd text-white animate__animated animate__fadeInUp animate__delay-3s" href="#">View
-                            details &raquo;</a>
-                    </p>
-                </div>
+                {% endfor %}
             </div>
-            <!-- /.col-lg-4 -->
+            {% if not promoteurs %}
+                <div class="alert alert-info text-center mt-4">Aucun promoteur enregistré pour le moment.</div>
+            {% endif %}
         </div>
-        <!-- /.row -->
     </section>
 
     <!--Adhésion-->
@@ -633,3 +623,33 @@
         })();
     </script>
 {% endblock %}
+    <!-- Publications récentes -->
+    <section class="container my-5">
+        <h2 class="text-center text-info mb-4">Dernières publications</h2>
+        <div class="row justify-content-center">
+            {% for pub in publications %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    {% if pub.fichier_joint %}
+                        {% with ext=pub.fichier_joint.url|lower|slice:'-4:' ext5=pub.fichier_joint.url|lower|slice:'-5:' %}
+                        {% if ext == '.jpg' or ext5 == '.jpeg' or ext == '.png' or ext == '.gif' %}
+                            <img src="{{ pub.fichier_joint.url }}" class="card-img-top" alt="Image publication" style="max-height:200px;object-fit:cover;">
+                        {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">{{ pub.titre }}</h5>
+                        <p class="card-text">{{ pub.description|truncatewords:30 }}</p>
+                        <p class="card-text"><span class="badge bg-info">{{ pub.get_type_display }}</span></p>
+                        <p class="card-text text-muted small"><i class="bi bi-person"></i> {{ pub.membre.username }} | <i class="bi bi-calendar-event"></i> {{ pub.date_publication|date:"d/m/Y" }}</p>
+                        {% if pub.fichier_joint %}
+                        <a href="{{ pub.fichier_joint.url }}" class="btn btn-outline-primary btn-sm" target="_blank">Télécharger</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center text-muted">Aucune publication récente.</div>
+            {% endfor %}
+        </div>
+    </section>

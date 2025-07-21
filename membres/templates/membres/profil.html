@@ -50,25 +50,59 @@
         <h3 class="mb-4 text-primary text-center fw-bold">
             <i class="bi bi-person-circle"></i> Mettre à jour mon profil
         </h3>
-        <form>
-            <div class="mb-3">
-                <label for="nom" class="form-label"><i class="bi bi-person-fill"></i>Nom complet</label>
-                <input type="text" class="form-control" id="nom" placeholder="Entrez votre nom complet">
-            </div>
-            <div class="mb-3">
-                <label for="email" class="form-label"><i class="bi bi-envelope-fill"></i>Email</label>
-                <input type="email" class="form-control" id="email" placeholder="exemple@mail.com">
-            </div>
-            <div class="mb-3">
-                <label for="ville" class="form-label"><i class="bi bi-geo-alt-fill"></i>Ville</label>
-                <input type="text" class="form-control" id="ville" placeholder="Ville de résidence">
-            </div>
+        <form method="POST" enctype="multipart/form-data" id="profilForm">
+            {% csrf_token %}
+            {{ form.as_p }}
             <div class="d-grid">
                 <button type="submit" class="btn btn-primary fw-bold">
                     <i class="bi bi-save-fill"></i> Mettre à jour
                 </button>
             </div>
         </form>
+
+        <!-- Modal de succès -->
+        <div class="modal fade" id="modalSuccess" tabindex="-1" aria-labelledby="modalSuccessLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-success text-white">
+              <div class="modal-header border-0">
+                <h5 class="modal-title" id="modalSuccessLabel"><i class="bi bi-check-circle"></i> Succès</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+              </div>
+              <div class="modal-body">
+                Profil mis à jour avec succès !
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('profilForm');
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const formData = new FormData(form);
+                fetch(window.location.pathname, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Afficher le pop-up de succès
+                        const modal = new bootstrap.Modal(document.getElementById('modalSuccess'));
+                        modal.show();
+                    } else {
+                        return response.text().then(text => { throw new Error(text); });
+                    }
+                })
+                .catch(error => {
+                    alert("Erreur lors de la mise à jour du profil.\n" + error.message);
+                });
+            });
+        });
+        </script>
     </div>
 </div>
 

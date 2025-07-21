@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-5">
+    <h3 class="mb-4 text-info text-center fw-bold"><i class="bi bi-robot"></i> Assistant AI pour rédiger votre publication</h3>
+    <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="prompt" class="form-label">Décrivez le sujet ou l'idée de votre publication :</label>
+            <textarea name="prompt" id="prompt" class="form-control" rows="3" required>{{ request.POST.prompt }}</textarea>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary px-5 py-2 fw-bold">
+                <i class="bi bi-magic"></i> Générer le texte
+            </button>
+        </div>
+    </form>
+    {% if suggestion %}
+        <div class="alert alert-success mt-4">
+            <h5 class="fw-bold">Texte proposé :</h5>
+            <p>{{ suggestion|linebreaks }}</p>
+        </div>
+    {% endif %}
+    {% if error %}
+        <div class="alert alert-danger mt-4">{{ error }}</div>
+    {% endif %}
+</div>
+{% endblock %}
